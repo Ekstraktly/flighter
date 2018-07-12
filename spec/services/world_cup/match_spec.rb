@@ -1,21 +1,21 @@
 RSpec.describe WorldCup::Match, :match do
   let(:match) do
     WorldCup::Match.new(
-      'venue': 'Rostov Arena',
-      'location': 'Rostov Arena', 'status': 'completed',
-      'fifa_id': '300331530',
-      'datetime': '2018-06-20T15:00:00',
-      'home_team': { 'country': 'Uruguay', 'code': 'URU', 'goals': 1 },
-      'away_team': { 'country': 'Saudi Arabia',
-                     'code': 'KSA', 'goals': 0 },
-      'winner': 'Uruguay', 'winner_code': 'URU', 'home_team_events':
-      [{ 'id': 276, 'type_of_event': 'goal',
-         'player': 'Luis SUAREZ',
-         'time': "23'" }],
-      'away_team_events': [{ 'id': 12,
-                             'type_of_event': 'substitution-in',
-                             'player': 'FAHAD ALMUWALLAD',
-                             'time': "64'" }]
+      'venue' => 'Rostov Arena',
+      'location' => 'Rostov Arena', 'status' => 'completed',
+      'fifa_id' => '300331530',
+      'datetime' => '2018-06-20T15:00:00',
+      'home_team' => { 'country' => 'Uruguay', 'code' => 'URU', 'goals' => 1 },
+      'away_team' => { 'country' => 'Saudi Arabia',
+                       'code' => 'KSA', 'goals' => 0 },
+      'winner' => 'Uruguay', 'winner_code' => 'URU', 'home_team_events' =>
+      [{ 'id' => 276, 'type_of_event' => 'goal',
+         'player' => 'Luis SUAREZ',
+         'time' => "23'" }],
+      'away_team_events' => [{ 'id' => 12,
+                               'type_of_event' => 'substitution-in',
+                               'player' => 'FAHAD ALMUWALLAD',
+                               'time' => "64'" }]
     )
   end
 
