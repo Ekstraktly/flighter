@@ -1,4 +1,4 @@
-class WorldCup
+module WorldCup
   class Event
     attr_accessor :id, :type, :player, :time
 

@@ -1,4 +1,4 @@
-class WorldCup
+module WorldCup
   class Match
     attr_accessor :venue, :status, :starts_at
 
