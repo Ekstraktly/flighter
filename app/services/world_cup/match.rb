@@ -1,5 +1,4 @@
-require '/home/joso/Desktop/infinum_ac/DZ3/'\
-        'flighter/app/services/world_cup/event.rb'
+require_relative './event.rb'
 module WorldCup
   class Match
     include WorldCup

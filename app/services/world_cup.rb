@@ -1,5 +1,4 @@
-require '/home/joso/Desktop/infinum_ac/'\
-        'DZ3/flighter/app/services/world_cup/match.rb'
+require_relative './world_cup/match.rb'
 module WorldCup
   def self.format_date(date)
     "#{date.year}-#{date.month.to_s.rjust(2, '0')}"\
