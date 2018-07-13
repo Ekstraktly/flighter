@@ -75,7 +75,7 @@ module WorldCup
     end
 
     def as_json(_opts)
-      { away_team: away_team, goal: goals_total,
+      { away_team: away_team, goals: goals_total,
         home_team: home_team,
         score: score,
         status: @status,

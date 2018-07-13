@@ -1,4 +1,4 @@
-require '/home/joso/Desktop/infinum_ac/DZ3/flighter/app/services/world_cup.rb'
+require './app/services/world_cup.rb'
 class ApplicationController < ActionController::Base
   include WorldCup
   def world_cup
