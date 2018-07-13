@@ -7,6 +7,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.7'
 end
 gem 'httparty'
+gem 'rails_12factor'
 gem 'table_print'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.0'
