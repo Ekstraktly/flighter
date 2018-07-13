@@ -1,4 +1,4 @@
-# require '/home/joso/Desktop/infinum_ac/DZ3/flighter/app/services/world_cup.rb'
+# require 'home/joso/Desktop/infinum_ac/DZ3/flighter/app/services/world_cup.rb'
 namespace :world_cup do
   include WorldCup
   desc 'world cup scores'
