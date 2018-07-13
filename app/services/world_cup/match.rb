@@ -1,3 +1,5 @@
+require '/home/joso/Desktop/infinum_ac/DZ3/'\
+        'flighter/app/services/world_cup/event.rb'
 module WorldCup
   class Match
     include WorldCup
@@ -50,6 +52,35 @@ module WorldCup
       all_events = @keys['home_team_events'] + @keys['away_team_events']
       all_events.select { |event| event['type_of_event'].match('goal') }
                 .map { |event| WorldCup::Event.new(event) }
+    end
+
+    def away_team
+      @keys['away_team']['country']
+    end
+
+    def home_team
+      @keys['home_team']['country']
+    end
+
+    def goals_total
+      (@keys['away_team']['goals'].to_i + @keys['home_team']['goals'].to_i)
+    end
+
+    def score
+      if !@keys['status'].match('future')
+        "#{@keys['home_team']['goals']} :"\
+        "#{@keys['away_team']['goals']}"
+      else
+        '--'
+      end
+    end
+
+    def as_json(_opts)
+      { away_team: away_team, goal: goals_total,
+        home_team: home_team,
+        score: score,
+        status: @status,
+        venue: @venue }
     end
   end
 end
