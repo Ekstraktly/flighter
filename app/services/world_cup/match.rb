@@ -67,7 +67,7 @@ module WorldCup
 
     def score
       if !@keys['status'].match('future')
-        "#{@keys['home_team']['goals']} :"\
+        "#{@keys['home_team']['goals']} : "\
         "#{@keys['away_team']['goals']}"
       else
         '--'
