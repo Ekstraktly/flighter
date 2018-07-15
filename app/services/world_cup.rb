@@ -1,3 +1,4 @@
+require 'httparty'
 require_relative './world_cup/match.rb'
 module WorldCup
   def self.format_date(date)
