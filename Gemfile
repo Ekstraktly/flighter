@@ -9,6 +9,7 @@ end
 gem 'httparty'
 gem 'overcommit'
 gem 'rails_12factor'
+gem 'rubocop', '~> 0.58.1'
 gem 'table_print'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.0'
