@@ -62,7 +62,11 @@ module WorldCup
     end
 
     def goals_total
-      (@keys['away_team']['goals'].to_i + @keys['home_team']['goals'].to_i)
+      if (home_team_goals.to_i + away_team_golas.to_i).zero?
+        '--'
+      else
+        (@keys['away_team']['goals'].to_i + @keys['home_team']['goals'].to_i)
+      end
     end
 
     def score
