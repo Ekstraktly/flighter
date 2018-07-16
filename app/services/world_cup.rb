@@ -9,7 +9,7 @@ module WorldCup
   end
 
   def self.matches
-    response = HTTParty.get('https://worldcup.sfg.io/matches/')
+    response = HTTParty.get('https://worldcup.sfg.io/matches')
     response.map { |match| WorldCup::Match.new(match) }
   end
 
