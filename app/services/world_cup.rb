@@ -1,7 +1,4 @@
-require_relative './world_cup/match.rb'
 module WorldCup
-  require 'httparty'
-
   include HTTParty
   def self.format_date(date)
     "#{date.year}-#{date.month.to_s.rjust(2, '0')}"\

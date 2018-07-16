@@ -1,4 +1,3 @@
-require_relative './event.rb'
 module WorldCup
   class Match
     include WorldCup
@@ -8,9 +7,9 @@ module WorldCup
       @keys = keys
       @venue = keys['venue']
       @status = keys['status']
-      year, month, day, hour, minute, second = keys['datetime'].split(/[-T:]/)
-      # second = second.slice(0..-1)
-      @starts_at = Time.utc(year, month, day, hour, minute, second)
+      # year, month, day, hour, minute, second = keys['datetime'].split(/[-T:]/)
+      # @starts_at = Time.utc(year, month, day, hour, minute, second)
+      @starts_at = Time.zone.parse(keys['datetime'])
     end
 
     def home_team_goals
@@ -40,17 +39,16 @@ module WorldCup
     def events
       all_events = @keys['home_team_events'] + @keys['away_team_events']
       all_events.map do |event|
-        WorldCup::Event.new('id' => event['id'],
-                            'player' => event['player'],
-                            'time' => event['time'],
-                            'type_of_event' => event['type_of_event'])
+        WorldCup::Event.new(event)
       end
     end
 
     def goals
-      all_events = @keys['home_team_events'] + @keys['away_team_events']
-      all_events.select { |event| event['type_of_event'].match('goal') }
-                .map { |event| WorldCup::Event.new(event) }
+      # all_events = @keys['home_team_events'] + @keys['away_team_events']
+      # all_events.select { |event| event['type_of_event'].match('goal') }
+      #          .map { |event| WorldCup::Event.new(event) }
+      # all_events = events
+      all.events = events.select { |event| event.type.match('goal') }
     end
 
     def away_team
@@ -62,7 +60,8 @@ module WorldCup
     end
 
     def goals_total
-      if (home_team_goals.to_i + away_team_goals.to_i).zero?
+      # if @keys['status'].match('future')?
+      if @keys['status'] == 'future'
         '--'
       else
         (@keys['away_team']['goals'].to_i + @keys['home_team']['goals'].to_i)
@@ -70,16 +69,18 @@ module WorldCup
     end
 
     def score
-      if !@keys['status'].match('future')
+      # if @keys['status'].match('future')?
+      if @keys['status'] == 'future'
+        '--'
+      else
         "#{@keys['home_team']['goals']} : "\
         "#{@keys['away_team']['goals']}"
-      else
-        '--'
       end
     end
 
     def as_json(_opts)
-      { away_team: away_team, goals: goals_total,
+      { away_team: away_team,
+        goals: goals_total,
         home_team: home_team,
         score: score,
         status: @status,

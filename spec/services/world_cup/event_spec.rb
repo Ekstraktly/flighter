@@ -1,20 +1,29 @@
 RSpec.describe WorldCup::Event, :world_cup_event do
+  let(:world_cup_event) do
+    WorldCup::Event.new(
+      'id' => 13,
+      'type_of_event' => 'goal',
+      'player' => 'Luka Modric',
+      'time' => "22'"
+    )
+  end
+
   it 'returns event ID' do
-    event = WorldCup::Event.new('id' => 13)
-    expect(event.id).to eq(13)
+    expect(world_cup_event.id).to eq(13)
   end
+
   it 'returns event type' do
-    event = WorldCup::Event.new('type_of_event' => 'goal')
-    expect(event.type).to eq('goal')
+    expect(world_cup_event.type).to eq('goal')
   end
+
   it 'returns included player' do
-    event = WorldCup::Event.new('player' => 'Luka Modric')
-    expect(event.player).to eq('Luka Modric')
+    expect(world_cup_event.player).to eq('Luka Modric')
   end
+
   it 'returns time of event' do
-    event = WorldCup::Event.new('time' => "22'")
-    expect(event.time).to eq("22'")
+    expect(world_cup_event.time).to eq("22'")
   end
+
   it 'returns to string method' do
     event = WorldCup::Event.new('id' => 12,
                                 'type_of_event' => 'substitution-in',
