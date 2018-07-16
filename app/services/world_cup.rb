@@ -14,7 +14,7 @@ module WorldCup
   end
 
   def self.matches_on(date)
-    response = HTTParty.get('https://worldcup.sfg.io/matches/')
+    response = HTTParty.get('https://worldcup.sfg.io/matches')
     right_responses = response.select do |mmatch|
       mmatch['datetime'].partition('T')[0]
                         .match(format_date(date))
