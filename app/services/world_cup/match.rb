@@ -48,7 +48,7 @@ module WorldCup
       # all_events.select { |event| event['type_of_event'].match('goal') }
       #          .map { |event| WorldCup::Event.new(event) }
       # all_events = events
-      all.events = events.select { |event| event.type.match('goal') }
+      events.select { |event| event.type.match('goal') }
     end
 
     def away_team
