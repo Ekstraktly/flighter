@@ -11,7 +11,7 @@ class Flight < ApplicationRecord
   validates :no_of_seats, numericality: { only_integer: true }
   validates :base_price, numericality: { greater_than: 0 },
                          presence: true
-  validate :flys_before_lands
+  # validate :flys_before_lands
 
   private
 
