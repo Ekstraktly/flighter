@@ -7,8 +7,6 @@ module WorldCup
       @keys = keys
       @venue = keys['venue']
       @status = keys['status']
-      # year, month, day, hour, minute, second = keys['datetime'].split(/[-T:]/)
-      # @starts_at = Time.utc(year, month, day, hour, minute, second)
       @starts_at = Time.zone.parse(keys['datetime'])
     end
 
@@ -44,10 +42,6 @@ module WorldCup
     end
 
     def goals
-      # all_events = @keys['home_team_events'] + @keys['away_team_events']
-      # all_events.select { |event| event['type_of_event'].match('goal') }
-      #          .map { |event| WorldCup::Event.new(event) }
-      # all_events = events
       events.select { |event| event.type.match('goal') }
     end
 
@@ -60,7 +54,6 @@ module WorldCup
     end
 
     def goals_total
-      # if @keys['status'].match('future')?
       if @keys['status'] == 'future'
         '--'
       else
@@ -69,7 +62,6 @@ module WorldCup
     end
 
     def score
-      # if @keys['status'].match('future')?
       if @keys['status'] == 'future'
         '--'
       else
