@@ -1,4 +1,4 @@
-class Flight < ActiveRecord::Base
+class Flight < ApplicationRecord::Base
   belongs_to :company
   has_many :bookings
   has_many :users, through: :bookings
@@ -6,9 +6,9 @@ class Flight < ActiveRecord::Base
   validates :name, length: { maximum: 45 },
                    presence: true,
                    uniqueness: { case_sensitive: false }
-  validates :no_of_seats, numericality: { only_integer: true  }  
+  validates :no_of_seats, numericality: { only_integer: true }
   validates :base_price, numericality: { greater_than: 0 },
-                         presence: true,
+                         presence: true
   validate :flys_before_lands
 
   def flys_before_lands
