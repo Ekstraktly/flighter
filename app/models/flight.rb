@@ -1,6 +1,7 @@
 class Flight < ActiveRecord::Base
   belongs_to :company
   has_many :bookings
+  has_many :users, through: :bookings
 
   validates :name, length: { maximum: 45 },
                    presence: true,
