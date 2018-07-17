@@ -1,4 +1,4 @@
-class User < ApplicationRecord::Base
+class User < ApplicationRecord
   has_many :bookings
   has_many :flights, through: :bookings
   validates :email, uniqueness: { case_sensitive: false },

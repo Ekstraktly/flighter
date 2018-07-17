@@ -1,7 +1,16 @@
 RSpec.describe User do
-  let!(:user) { User.create(first_name: 'M', last_name: 'Mickey', email: 'mike@mickey.com') }
-  it { should validate_presence_of(:first_name) }
-  it { should validate_length_of(:first_name).is_at_least(2) }
-  it { should validate_presence_of(:email) }
-  # it { should validate_uniqueness_of(:email).case_insensitive }
+  let(:user) { FactoryBot.create(:user) }
+
+  it { is_expected.to validate_presence_of(:first_name) }
+  it { is_expected.to validate_length_of(:first_name).is_at_least(2) }
+  it { is_expected.to validate_presence_of(:email) }
+  describe 'uniqueness' do
+    subject do
+      described_class.new(email: 'bla@bla.hr',
+                          first_name: 'Bla',
+                          last_name: 'Milich')
+    end
+
+    it { is_expected.to validate_uniqueness_of(:email).case_insensitive }
+  end
 end

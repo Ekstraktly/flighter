@@ -1,7 +1,9 @@
-class Flight < ApplicationRecord::Base
+class Flight < ApplicationRecord
   belongs_to :company
   has_many :bookings
   has_many :users, through: :bookings
+
+  attr_accessor :flys_at, :lands_at
 
   validates :name, length: { maximum: 45 },
                    presence: true,
@@ -11,7 +13,10 @@ class Flight < ApplicationRecord::Base
                          presence: true
   validate :flys_before_lands
 
+  private
+
   def flys_before_lands
-    return if Date.parse(:flys_at) < Date.parse(:lands_at)
+    # return if lands_at - flys_at < 3.days
+    return if Time.zone.parse(flys_at) < Time.zone.parse(lands_at)
   end
 end

@@ -1,4 +1,4 @@
-class Booking < ApplicationRecord::Base
+class Booking < ApplicationRecord
   belongs_to :users
   belongs_to :flights
   validates :seat_price, presence: true,

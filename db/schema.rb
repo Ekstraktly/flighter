@@ -36,8 +36,8 @@ ActiveRecord::Schema.define(version: 2018_07_17_154757) do
     t.string "name"
     t.integer "no_of_seats"
     t.integer "base_price"
-    t.date "flys_at"
-    t.date "lands_at"
+    t.datetime "flys_at"
+    t.datetime "lands_at"
     t.bigint "company_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
