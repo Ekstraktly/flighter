@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :company do
-    name 'Lufthansa'
+    name 'Air France'
   end
 end

@@ -1,11 +1,11 @@
 FactoryBot.define do
   factory :flight do
-    name 'A157'
+    name 'A160'
     no_of_seats '120'
     base_price '500'
-    flys_at { Date.parse('2018-07-15') }
-    lands_at { Date.parse('2018-07-14') }
-    company_id 'LFH'
+    flys_at '2018-07-17'
+    lands_at '2018-06-16'
+    company_id 'AFR'
     company
   end
 end
