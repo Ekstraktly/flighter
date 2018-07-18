@@ -5,10 +5,12 @@ class Flight < ApplicationRecord
 
   validates :name, length: { maximum: 45 },
                    presence: true,
-                   uniqueness: { case_sensitive: false }
-  validates :no_of_seats, numericality: { only_integer: true }
+                   uniqueness: { case_sensitive: false, scope: :company_id }
+  validates :no_of_seats, numericality: { greater_than: 0 }, presence: true
   validates :base_price, numericality: { greater_than: 0 },
                          presence: true
+  validates :flys_at, presence: true
+  validates :lands_at, presence: true
   # validate :flys_before_lands
 
   # private

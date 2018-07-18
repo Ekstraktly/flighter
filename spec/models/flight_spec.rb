@@ -5,7 +5,11 @@ RSpec.describe Flight do
   describe 'uniqueness' do
     subject { described_class.new(name: 'Lufthansa', base_price: '100') }
 
-    it { is_expected.to validate_uniqueness_of(:name).case_insensitive }
+    it {
+      is_expected.to validate_uniqueness_of(:name)
+        .case_insensitive
+        .scoped_to(:company_id)
+    }
   end
 
   # it 'checks if flys before lands' do
