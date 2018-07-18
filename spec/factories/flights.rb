@@ -4,7 +4,7 @@ FactoryBot.define do
     no_of_seats '120'
     base_price '500'
     flys_at '2018-07-17'
-    lands_at '2018-06-16'
+    lands_at '2018-08-16'
     company
   end
 end
