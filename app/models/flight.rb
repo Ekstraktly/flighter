@@ -15,6 +15,6 @@ class Flight < ApplicationRecord
 
   def flys_before_lands
     return if flys_at && lands_at && (flys_at < lands_at)
-    errors.add(:land_at, 'must be later than flys_at')
+    errors.add(:lands_at, 'must be later than flys_at')
   end
 end
