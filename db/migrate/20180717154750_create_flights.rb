@@ -5,8 +5,8 @@ class CreateFlights < ActiveRecord::Migration[5.2]
       t.string :name
       t.integer :no_of_seats
       t.integer :base_price
-      t.date :flys_at
-      t.date :lands_at
+      t.datetime :flys_at
+      t.datetime :lands_at
       t.timestamps null: false
     end
   end
