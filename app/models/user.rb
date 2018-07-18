@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   has_many :bookings
-  has_many :flights, through: :bookings
+  has_many :flights, through: :bookings, dependent: false
   validates :email, uniqueness: { case_sensitive: false },
                     presence: true,
                     length: { maximum: 45 },
