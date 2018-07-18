@@ -11,12 +11,12 @@ class Flight < ApplicationRecord
                          presence: true
   validates :flys_at, presence: true
   validates :lands_at, presence: true
-  # validate :flys_before_lands
+  validate :flys_before_lands
 
-  # private
+  private
 
-  # def flys_before_lands
-  #  return if flys_at < lands_at
-  #  errors.add(:land_at, 'must be later than flys_at')
-  # end
+  def flys_before_lands
+    return if flys_at < lands_at
+    errors.add(:land_at, 'must be later than flys_at')
+  end
 end

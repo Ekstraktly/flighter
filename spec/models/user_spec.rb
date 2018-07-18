@@ -12,5 +12,6 @@ RSpec.describe User do
     end
 
     it { is_expected.to validate_uniqueness_of(:email).case_insensitive }
+    it { is_expected.to have_db_index(:email).unique(true) }
   end
 end
