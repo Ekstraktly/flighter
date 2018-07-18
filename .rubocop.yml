@@ -34,8 +34,6 @@ AllCops:
     - 'db/schema.rb'
     - 'db/migrate/*.rb'
     - 'config/**/*.rb'
-    - 'spec/models/company_spec.rb'
-    - 'spec/models/booking_spec.rb'
 
 Rails/HasManyOrHasOneDependent:
   Enabled: false
