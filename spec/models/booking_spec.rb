@@ -19,7 +19,7 @@ RSpec.describe Booking do
                                        no_of_seats: '2',
                                        seat_price: '100')
     test_booking.valid?
-    expect(test_booking.errors[:flys_at]).to
-    include('must be booked in the future')
+    expect(test_booking.errors[:flys_at]).to include('must
+      be booked in the future')
   end
 end
