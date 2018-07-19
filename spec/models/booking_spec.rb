@@ -11,4 +11,14 @@ RSpec.describe Booking do
     is_expected.to validate_numericality_of(:no_of_seats)
       .is_greater_than(0)
   }
+  it 'checks if booking is in past' do
+    test_flight = FactoryBot.build(:flight, flys_at: Time.current - 1.day)
+    test_user = FactoryBot.build(:user)
+    booking = described_class.new(flight: test_flight,
+                                  user: test_user,
+                                  no_of_seats: '50',
+                                  seat_price: '100')
+    booking.valid?
+    expect(booking.errors[:flys_at]).to include('can not be booked in past')
+  end
 end

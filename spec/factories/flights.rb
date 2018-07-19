@@ -1,10 +1,10 @@
 FactoryBot.define do
   factory :flight do
-    name 'A160'
-    no_of_seats '120'
-    base_price '500'
-    flys_at { Time.zone.parse('2018-07-17') }
-    lands_at { Time.zone.parse('2018-06-16') }
+    sequence(:name) { |n| "A#{n}" }
+    no_of_seats 120
+    base_price 500
+    flys_at { Time.current + 1.day }
+    lands_at { Time.current + 2.days }
     company
   end
 end
