@@ -1,6 +1,6 @@
 class Flight < ApplicationRecord
   belongs_to :company
-  has_many :bookings, dependent: :nullify
+  has_many :bookings, dependent: :destroy
   has_many :users, through: :bookings
 
   validates :name, length: { maximum: 45 },
