@@ -20,7 +20,7 @@ RSpec.describe Flight do
                                    flys_at: Time.current + 1.day,
                                    lands_at: Time.current - 1.day)
     test_flight.valid?
-    expect(test_flight.errors[:lands_at]).to include('must be later
-    than flys_at')
+    expect(test_flight
+      .errors[:lands_at]).to include('must be later than flys_at')
   end
 end
