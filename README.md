@@ -1,3 +1,3 @@
 # README
 
-flighter.heroku.com
+flighter.herokuapp.com
