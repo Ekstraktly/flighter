@@ -16,11 +16,11 @@ RSpec.describe Flight do
   it { is_expected.to validate_presence_of(:base_price) }
   it { is_expected.to validate_numericality_of(:base_price).is_greater_than(0) }
   it 'checks if flys before lands' do
-    # FactoryBot.build - da ga ne sejva u bazu
     test_flight = FactoryBot.build(:flight,
                                    flys_at: Time.current + 1.day,
                                    lands_at: Time.current - 1.day)
     test_flight.valid?
-    expect(flight.errors[:lands_at]).to include('must be later than flys_at')
+    expect(test_flight.errors[:lands_at])
+      .to include('must be later than flys_at')
   end
 end
