@@ -7,4 +7,5 @@ Rails.application.routes.draw do
     resources :flights
     resources :bookings
   end
+  get '/world-cup', to: 'application#world_cup'
 end
