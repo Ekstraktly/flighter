@@ -14,7 +14,7 @@ module Api
       if booking.save
         render json: booking, status: :created
       else
-        render json: booking.errors, status: :bad_request
+        render json: { errors: booking.errors }, status: :bad_request
       end
     end
 
