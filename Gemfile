@@ -3,19 +3,22 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.5.1'
 group :development do
-  gem 'pry-rails'
+  gem 'overcommit', require: false
   gem 'rubocop', '~> 0.58.0', require: false
   gem 'rubocop-rspec', '~> 1.27.0', require: false
 end
-group :development do
-  gem 'overcommit', require: false
-end
+
 group :development, :test do
   gem 'factory_bot_rails'
+  gem 'pry-rails'
   gem 'rspec-rails', '~> 3.7'
   gem 'shoulda-matchers'
 end
+gem 'active_model_serializers', '~> 0.10.0'
 gem 'activeadmin'
+gem 'httparty'
+gem 'rails_12factor'
+gem 'table_print'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.0'
 # Use postgresql as the database for Active Record
@@ -27,7 +30,7 @@ gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'mini_racer', platforms: :ruby
+gem 'mini_racer', platforms: :ruby
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
@@ -56,5 +59,4 @@ group :development do
   gem 'web-console', '>= 3.3.0'
 end
 
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
