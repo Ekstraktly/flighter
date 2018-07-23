@@ -21,18 +21,18 @@ module Api
     def update
       @company = Company.find(params[:id])
       if @company.update(company_params)
-        render json: company, status: :ok
+        render json: @company, status: :ok
       else
-        render json: company.errors, status: :bad_request
+        render json: @company.errors, status: :bad_request
       end
     end
 
     def destroy
       @company = Company.find(params[:id])
       if @company.destroy
-        render json: company, status: :no_content
+        render json: @company, status: :no_content
       else
-        render json: company.errors, status: :bad_request
+        render json: @company.errors, status: :bad_request
       end
     end
 
