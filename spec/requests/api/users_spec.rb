@@ -15,7 +15,7 @@ RSpec.describe 'Users API', type: :request do
     it 'returns a single user' do
       get "/api/users/#{users.first.id}"
       json_body = JSON.parse(response.body)
-      expect(json_body).to include('email')
+      expect(json_body['user']).to include('email')
     end
   end
 
@@ -27,7 +27,7 @@ RSpec.describe 'Users API', type: :request do
                                first_name: 'Darko',
                                last_name: 'Marko' } }
         json_body = JSON.parse(response.body)
-        expect(json_body).to include('email' => 'darko@marko.com')
+        expect(json_body['user']).to include('email' => 'darko@marko.com')
       end
     end
 
