@@ -30,9 +30,9 @@ module Api
     def destroy
       @user = User.find(params[:id])
       if @user.destroy
-        render json: user, status: :no_content
+        render json: @user, status: :no_content
       else
-        render json: user.errors, status: :bad_request
+        render json: @user.errors, status: :bad_request
       end
     end
 
