@@ -12,8 +12,8 @@ RSpec.describe Booking do
       .is_greater_than(0)
   }
   it 'checks if booking is in past' do
-    test_flight = FactoryBot.build(:flight, flys_at: Time.current - 1.day)
-    test_user = FactoryBot.build(:user)
+    test_flight = FactoryBot.create(:flight, flys_at: Time.current - 1.day)
+    test_user = FactoryBot.create(:user)
     test_booking = described_class.new(flight: test_flight,
                                        user: test_user,
                                        no_of_seats: 2,
