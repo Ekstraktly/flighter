@@ -3,7 +3,6 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.5.1'
 group :development do
-  gem 'pry-rails'
   gem 'rubocop', '~> 0.58.0', require: false
   gem 'rubocop-rspec', '~> 1.27.0', require: false
 end
@@ -12,6 +11,7 @@ group :development do
 end
 group :development, :test do
   gem 'factory_bot_rails'
+  gem 'pry-rails'
   gem 'rspec-rails', '~> 3.7'
   gem 'shoulda-matchers'
 end

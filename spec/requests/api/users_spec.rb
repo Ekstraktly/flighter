@@ -38,4 +38,31 @@ RSpec.describe 'Users API', type: :request do
       end
     end
   end
+
+  describe 'UPDATE /api/users/:id' do
+    let(:users) { FactoryBot.create_list(:user, 3) }
+
+    context 'when params are valid' do
+      it 'updates a user' do
+        put "/api/users/#{users.first.id}",
+            params: { user: { email: 'ivan.novak@mail.hr' } }
+        json_body = JSON.parse(response.body)
+        expect(json_body['user']).to include('email' => 'ivan.novak@mail.hr')
+      end
+    end
+  end
+
+  describe 'DELETE /api/users/:id' do
+    let(:user) { FactoryBot.create(:user) }
+
+    before { user }
+
+    context 'when params are valid' do
+      it 'deletes a user' do
+        expect do
+          delete "/api/users/#{user.id}"
+        end.to change(User, :count).by(-1)
+      end
+    end
+  end
 end
