@@ -14,25 +14,25 @@ module Api
       if flight.save
         render json: flight, status: :created
       else
-        render json: flight.errors, status: :bad_request
+        render json: { errors: flight.errors }, status: :bad_request
       end
     end
 
     def update
       @flight = Flight.find(params[:id])
       if @flight.update(flight_params)
-        render json: flight, status: :ok
+        render json: @flight, status: :ok
       else
-        render json: flight.errors, status: :bad_request
+        render json: { errors: @flight.errors }, status: :bad_request
       end
     end
 
     def destroy
       @flight = Flight.find(params[:id])
       if @flight.destroy
-        render json: flight, status: :no_content
+        render json: @flight, status: :no_content
       else
-        render json: flight.errors, status: :bad_request
+        render json: @flight.errors, status: :bad_request
       end
     end
 

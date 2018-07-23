@@ -23,7 +23,7 @@ module Api
       if @booking.update(booking_params)
         render json: @booking, status: :ok
       else
-        render json: @booking.errors, status: :bad_request
+        render json: { errors: @booking.errors }, status: :bad_request
       end
     end
 

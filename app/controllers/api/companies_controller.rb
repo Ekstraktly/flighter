@@ -14,7 +14,7 @@ module Api
       if company.save
         render json: company, status: :created
       else
-        render json: company.errors, status: :bad_request
+        render json: { errors: company.errors }, status: :bad_request
       end
     end
 
@@ -23,7 +23,7 @@ module Api
       if @company.update(company_params)
         render json: @company, status: :ok
       else
-        render json: @company.errors, status: :bad_request
+        render json: { errors: company.errors }, status: :bad_request
       end
     end
 
