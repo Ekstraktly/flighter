@@ -21,7 +21,7 @@ module Api
     def update
       @booking = Booking.find(params[:id])
       if @booking.update(booking_params)
-        render json: booking, status: :ok
+        render json: @booking, status: :ok
       else
         render json: booking.errors, status: :bad_request
       end
@@ -30,7 +30,7 @@ module Api
     def destroy
       @booking = Booking.find(params[:id])
       if @booking.destroy
-        render json: booking, status: :no_content
+        render json: @booking, status: :no_content
       else
         render json: booking.errors, status: :bad_request
       end
