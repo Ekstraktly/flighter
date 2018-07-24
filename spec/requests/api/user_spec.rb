@@ -31,7 +31,7 @@ RSpec.describe 'Users API', type: :request do
     let(:user_params) { FactoryBot.attributes_for(:user) }
 
     context 'when params are valid' do
-      it 'checks User count' do
+      it 'creates a user' do
         expect do
           post '/api/users', params: { user: user_params }
         end.to change(User, :count).by(1)
@@ -44,14 +44,17 @@ RSpec.describe 'Users API', type: :request do
 
     context 'when params are invalid' do
       it 'returns 402 bad request' do
-        it 'returns bad request' do
+        expect do
           post '/api/users', params: { user: { email: '' } }
-          expect(response).to have_http_status(:bad_request)
-        end
-        it 'checks for errors key' do
-          post '/api/users', params: { user: { email: '' } }
-          expect(json_body[:errors]).to include(:email)
-        end
+        end.to change(User, :count).by(0)
+      end
+      it 'returns bad request' do
+        post '/api/users', params: { user: { email: '' } }
+        expect(response).to have_http_status(:bad_request)
+      end
+      it 'checks for errors key' do
+        post '/api/users', params: { user: { email: '' } }
+        expect(json_body[:errors]).to include(:email)
       end
     end
   end
