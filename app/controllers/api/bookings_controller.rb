@@ -1,12 +1,12 @@
 module Api
   class BookingsController < ApplicationController
     def index
-      render json: Booking.all, each_serializer: BookingSerializer
+      render json: Booking.all
     end
 
     def show
-      booking = Booking.find(params[:id])
-      render json: booking, serializer: BookingSerializer
+      booking
+      render json: @booking
     end
 
     def create
@@ -19,7 +19,7 @@ module Api
     end
 
     def update
-      @booking = Booking.find(params[:id])
+      booking
       if @booking.update(booking_params)
         render json: @booking, status: :ok
       else
@@ -28,12 +28,9 @@ module Api
     end
 
     def destroy
-      @booking = Booking.find(params[:id])
-      if @booking.destroy
-        render json: @booking, status: :no_content
-      else
-        render json: @booking.errors, status: :bad_request
-      end
+      booking
+      @booking.destroy
+      head :no_content
     end
 
     private
@@ -43,6 +40,10 @@ module Api
                                       :user_id,
                                       :no_of_seats,
                                       :seat_price)
+    end
+
+    def booking
+      @booking ||= Booking.find(params[:id])
     end
   end
 end

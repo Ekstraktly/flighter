@@ -34,3 +34,6 @@ AllCops:
     - 'db/schema.rb'
     - 'db/migrate/*.rb'
     - 'config/**/*.rb'
+
+RSpec/MultipleExpectations:
+  Max: 5

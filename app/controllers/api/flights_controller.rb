@@ -1,12 +1,12 @@
 module Api
   class FlightsController < ApplicationController
     def index
-      render json: Flight.all, each_serializer: FlightSerializer
+      render json: Flight.all
     end
 
     def show
-      flight = Flight.find(params[:id])
-      render json: flight, serializer: FlightSerializer
+      flight
+      render json: @flight
     end
 
     def create
@@ -19,7 +19,7 @@ module Api
     end
 
     def update
-      @flight = Flight.find(params[:id])
+      flight
       if @flight.update(flight_params)
         render json: @flight, status: :ok
       else
@@ -28,12 +28,9 @@ module Api
     end
 
     def destroy
-      @flight = Flight.find(params[:id])
-      if @flight.destroy
-        render json: @flight, status: :no_content
-      else
-        render json: @flight.errors, status: :bad_request
-      end
+      flight
+      @flight.destroy
+      head :no_content
     end
 
     private
@@ -45,6 +42,10 @@ module Api
                                      :base_price,
                                      :flys_at,
                                      :lands_at)
+    end
+
+    def flight
+      @flight ||= Flight.find(params[:id])
     end
   end
 end
