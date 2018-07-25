@@ -16,6 +16,7 @@ group :development, :test do
 end
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'activeadmin'
+gem 'bcrypt', '~> 3.1.7'
 gem 'httparty'
 gem 'rails_12factor'
 gem 'table_print'

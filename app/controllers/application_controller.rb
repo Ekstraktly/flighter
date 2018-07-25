@@ -1,15 +1,19 @@
 class ApplicationController < ActionController::Base
-  skip_before_action :verify_authenticity_token
+  before_action :verify_authenticity_token, only: [:index,
+                                                   :show,
+                                                   :update,
+                                                   :destroy]
+  before_action :authorize, only: [:index, :show, :update, :destroy]
+  before_action :current_user
 
-  def world_cup
-    if params.key?('date')
-      render json: WorldCup.matches_on(extract_date)
-    else
-      render json: WorldCup.matches
-    end
+  private
+
+  def authorize
+    return if User.find_by(token: request.headers['Authorization'])
+    render json: { 'errors': { 'token': 'is invalid' } }, status: :unauthorized
   end
 
-  def extract_date
-    Date.parse(params['date'])
+  def current_user
+    @current_user ||= User.find_by(token: request.headers['Authorization'])
   end
 end

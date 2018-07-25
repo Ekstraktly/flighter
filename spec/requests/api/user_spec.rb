@@ -90,6 +90,9 @@ RSpec.describe 'Users API', type: :request do
         expect do
           delete "/api/users/#{user.id}"
         end.to change(User, :count).by(-1)
+      end
+      it 'returns 204 No content' do
+        delete "/api/users/#{user.id}"
         expect(response).to have_http_status(:no_content)
       end
     end

@@ -35,6 +35,9 @@ RSpec.describe 'Companys API', type: :request do
         expect do
           post '/api/companies', params: { company: company_params }
         end.to change(Company, :count).by(1)
+      end
+      it 'checks company name' do
+        post '/api/companies', params: { company: company_params }
         expect(json_body[:company]).to include(name: company_params[:name])
       end
     end
@@ -44,7 +47,13 @@ RSpec.describe 'Companys API', type: :request do
         expect do
           post '/api/companies', params: { company: { name: '' } }
         end.to change(Company, :count).by(0)
+      end
+      it 'returns bad request' do
+        post '/api/companies', params: { company: { name: '' } }
         expect(response).to have_http_status(:bad_request)
+      end
+      it 'checks for errors key' do
+        post '/api/companies', params: { company: { name: '' } }
         expect(json_body[:errors]).to include(:name)
       end
     end
@@ -78,6 +87,9 @@ RSpec.describe 'Companys API', type: :request do
         expect do
           delete "/api/companies/#{company.id}"
         end.to change(Company, :count).by(-1)
+      end
+      it 'returns 204 Bad request' do
+        delete "/api/companies/#{company.id}"
         expect(response).to have_http_status(:no_content)
       end
     end

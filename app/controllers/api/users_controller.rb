@@ -1,12 +1,19 @@
 module Api
   class UsersController < ApplicationController
     def index
-      render json: User.all
+      render json: User.select { |user|
+        user.id == @current_user.id
+      }
     end
 
     def show
       user
-      render json: @user
+      if @user.id == @current_user.id
+        render json: @user
+      else
+        render json: { 'errors': { 'resource': 'is forbidden' } },
+               status: :forbidden
+      end
     end
 
     def create
@@ -20,23 +27,30 @@ module Api
 
     def update
       user
-      if @user.update(user_params)
+      if @user.update(user_params) && @user.id == @current_user.id
         render json: @user, status: :ok
       else
-        render json: { errors: @user.errors }, status: :bad_request
+        render json: { 'errors': { 'resource': 'is forbidden' } },
+               status: :forbidden
       end
     end
 
     def destroy
       user
-      @user.destroy
-      head :no_content
+      if @user.id == @current_user.id
+        @user.destroy
+      else
+        render json: { errors: user.errors }, status: :unauthorized
+      end
     end
 
     private
 
     def user_params
-      params.require(:user).permit(:email, :first_name, :last_name)
+      params.require(:user).permit(:email,
+                                   :first_name,
+                                   :last_name,
+                                   :password_digest)
     end
 
     def user

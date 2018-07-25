@@ -55,6 +55,9 @@ RSpec.describe 'Bookings API', type: :request do
         expect do
           post '/api/bookings', params: { booking: booking_params }
         end.to change(Booking, :count).by(1)
+      end
+      it 'checks existance of seat_price' do
+        post '/api/bookings', params: { booking: booking_params }
         expect(json_body[:booking]).to include(seat_price: 200)
       end
     end
@@ -64,8 +67,14 @@ RSpec.describe 'Bookings API', type: :request do
         expect do
           post '/api/bookings', params: { booking: { flight_id: '' } }
         end.to change(User, :count).by(0)
-        expect(response).to have_http_status(:bad_request)
+      end
+      it 'returns errors' do
+        post '/api/bookings', params: { booking: { flight_id: '' } }
         expect(json_body[:errors]).to include(:flight)
+      end
+      it 'returns status 204 Bad request' do
+        post '/api/bookings', params: { booking: { flight_id: '' } }
+        expect(response).to have_http_status(:bad_request)
       end
     end
   end
@@ -115,6 +124,9 @@ RSpec.describe 'Bookings API', type: :request do
         expect do
           delete "/api/bookings/#{booking.id}"
         end.to change(Booking, :count).by(-1)
+      end
+      it 'returns 204 Bad request' do
+        delete "/api/bookings/#{booking.id}"
         expect(response).to have_http_status(:no_content)
       end
     end

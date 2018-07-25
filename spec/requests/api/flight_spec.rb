@@ -39,6 +39,9 @@ RSpec.describe 'Flights API', type: :request do
         expect do
           post '/api/flights', params: { flight: flight_params }
         end.to change(Flight, :count).by(1)
+      end
+      it 'checks for company_id' do
+        post '/api/flights', params: { flight: flight_params }
         expect(json_body[:flight]).to include(company_id: company.id)
       end
     end
@@ -48,7 +51,13 @@ RSpec.describe 'Flights API', type: :request do
         expect do
           post '/api/flights', params: { flight: { name: '' } }
         end.to change(Flight, :count).by(0)
+      end
+      it 'returns bad request' do
+        post '/api/flights', params: { flight: { name: '' } }
         expect(response).to have_http_status(:bad_request)
+      end
+      it 'checks for errors key' do
+        post '/api/flights', params: { flight: { name: '' } }
         expect(json_body[:errors]).to include(:name)
       end
     end
@@ -85,6 +94,9 @@ RSpec.describe 'Flights API', type: :request do
         expect do
           delete "/api/flights/#{flight.id}"
         end.to change(Flight, :count).by(-1)
+      end
+      it 'shows 204 Bad request' do
+        delete "/api/flights/#{flight.id}"
         expect(response).to have_http_status(:no_content)
       end
     end
