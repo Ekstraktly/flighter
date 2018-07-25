@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.htm
+  ActiveAdmin.routes(self)
+  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  namespace :api do
+    resources :users
+    resources :companies
+    resources :flights
+    resources :bookings
+  end
   get '/world-cup', to: 'application#world_cup'
 end

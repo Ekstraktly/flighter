@@ -2,15 +2,22 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.5.1'
+group :development do
+  gem 'overcommit', require: false
+  gem 'rubocop', '~> 0.58.0', require: false
+  gem 'rubocop-rspec', '~> 1.27.0', require: false
+end
+
 group :development, :test do
+  gem 'factory_bot_rails'
   gem 'pry-rails'
   gem 'rspec-rails', '~> 3.7'
+  gem 'shoulda-matchers'
 end
+gem 'active_model_serializers', '~> 0.10.0'
+gem 'activeadmin'
 gem 'httparty'
-gem 'overcommit'
 gem 'rails_12factor'
-gem 'rubocop', '~> 0.58.1'
-gem 'rubocop-rspec'
 gem 'table_print'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.0'
@@ -27,7 +34,6 @@ gem 'mini_racer', platforms: :ruby
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
-# Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'

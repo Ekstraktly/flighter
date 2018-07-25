@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  skip_before_action :verify_authenticity_token
+
   def world_cup
     if params.key?('date')
       render json: WorldCup.matches_on(extract_date)
