@@ -30,7 +30,7 @@ module Api
     end
 
     def update
-      if booking.update(booking_params)
+      if booking.update(booking_params.merge(user_id: @current_user.id))
         render json: booking
       else
         render json: { errors: booking.errors }, status: :bad_request
