@@ -104,8 +104,8 @@ RSpec.describe 'Bookings API', type: :request do
     let(:flight) { FactoryBot.create(:flight) }
     let(:user) { FactoryBot.create(:user) }
     let(:booking_params) do
-      { flight_id: flight.id.to_s,
-        user_id: user.id.to_s,
+      { flight_id: flight.id,
+        user_id: user.id,
         no_of_seats: 2,
         seat_price: 200 }
     end
@@ -117,6 +117,7 @@ RSpec.describe 'Bookings API', type: :request do
                                 headers: { Authorization: user.token }
         end.to change(user.bookings, :count).by(1)
       end
+
       it 'checks existance of seat_price' do
         post '/api/bookings', params: { booking: booking_params },
                               headers: { Authorization: user.token }
@@ -127,14 +128,9 @@ RSpec.describe 'Bookings API', type: :request do
     context 'when params are invalid' do
       it 'not change booking count' do
         expect do
-          post '/api/bookings', params: { booking: { flight_id: '' } },
+          post '/api/bookings', params: { booking: { flight_id: 'asd' } },
                                 headers: { Authorization: user.token }
         end.to change(Booking, :count).by(0)
-      end
-      it 'returns status Bad request' do
-        post '/api/bookings', params: { booking: { flight_id: '' } },
-                              headers: { Authorization: user.token }
-        expect(response).to have_http_status(:bad_request)
       end
     end
   end
