@@ -51,7 +51,7 @@ module Api
         if @find_booking.update(booking_params)
           render json: @find_booking, status: :ok
         else
-          render json: { errors: booking.errors }, status: :bad_request
+          render json: { errors: find_booking.errors }, status: :bad_request
         end
       else
         render json: { 'errors': { 'resource': ['is forbidden'] } },
