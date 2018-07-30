@@ -31,7 +31,7 @@ RSpec.describe 'Companys API', type: :request do
           expect(response).to have_http_status(:unauthorized)
         end
         it 'returns token is invalid error' do
-          expect(json_body[:errors][:token]).to eq('is invalid')
+          expect(json_body[:errors][:token]).to eq(['is invalid'])
         end
       end
     end
@@ -84,7 +84,7 @@ RSpec.describe 'Companys API', type: :request do
         expect(response).to have_http_status(:unauthorized)
       end
       it '  returns token is invalid error' do
-        expect(json_body[:errors][:token]).to eq('is invalid')
+        expect(json_body[:errors][:token]).to eq(['is invalid'])
       end
     end
   end
@@ -196,7 +196,7 @@ RSpec.describe 'Companys API', type: :request do
           expect(response).to have_http_status(:unauthorized)
         end
         it 'returns token is invalid error' do
-          expect(json_body[:errors][:token]).to eq('is invalid')
+          expect(json_body[:errors][:token]).to eq(['is invalid'])
         end
       end
     end
