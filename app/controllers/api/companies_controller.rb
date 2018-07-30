@@ -1,12 +1,12 @@
 module Api
   class CompaniesController < ApplicationController
     def index
-      render json: Company.all, each_serializer: CompanySerializer
+      render json: Company.all
     end
 
     def show
-      company = Company.find(params[:id])
-      render json: company, serializer: CompanySerializer
+      company
+      render json: @company
     end
 
     def create
@@ -19,7 +19,7 @@ module Api
     end
 
     def update
-      @company = Company.find(params[:id])
+      company
       if @company.update(company_params)
         render json: @company, status: :ok
       else
@@ -28,18 +28,19 @@ module Api
     end
 
     def destroy
-      @company = Company.find(params[:id])
-      if @company.destroy
-        render json: @company, status: :no_content
-      else
-        render json: @company.errors, status: :bad_request
-      end
+      company
+      @company.destroy
+      head :no_content
     end
 
     private
 
     def company_params
       params.require(:company).permit(:name)
+    end
+
+    def company
+      @company ||= Company.find(params[:id])
     end
   end
 end
