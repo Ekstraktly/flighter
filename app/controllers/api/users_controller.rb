@@ -4,9 +4,7 @@ module Api
     before_action :current_user, only: [:index, :show, :update, :destroy]
 
     def index
-      render json: User.select { |user|
-        user.id == @current_user.id
-      }
+      render json: User.all
     end
 
     def show

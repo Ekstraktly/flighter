@@ -24,7 +24,6 @@ module Api
     end
 
     def create
-      current_user
       user = User.find_by(token: @current_user.token)
       booking = create_booking
       if user && booking.user_id == @current_user.id
