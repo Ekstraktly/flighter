@@ -1,47 +1,40 @@
 RSpec.describe 'Bookings API', type: :request do
   include TestHelpers::JsonResponse
   describe 'GET /bookings' do
-    context 'when authenticated user' do
-      let(:user) { FactoryBot.create(:user) }
-      let(:flight) { FactoryBot.create(:flight) }
+    let(:user) { FactoryBot.create(:user) }
+    let(:flight) { FactoryBot.create(:flight) }
 
+    before do
+      Booking.create(flight: flight,
+                     user: user,
+                     no_of_seats: 2,
+                     seat_price: 100)
+      get '/api/bookings', headers: { Authorization: user.token }
+    end
+
+    context 'when authenticated user and valid params' do
+      it 'successfully returns a list of bookings' do
+        expect(json_body[:bookings].length).to eq(1)
+      end
+      it 'returns status OK' do
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'when unauthenticated user and valid params' do
       before do
         Booking.create(flight: flight,
                        user: user,
                        no_of_seats: 2,
                        seat_price: 100)
-        get '/api/bookings', headers: { Authorization: user.token }
+        get '/api/bookings', headers: { Authorization: 'wrong_token' }
       end
 
-      context 'when params are valid' do
-        it 'successfully returns a list of bookings' do
-          expect(json_body[:bookings].length).to eq(1)
-        end
-        it 'returns status OK' do
-          expect(response).to have_http_status(:ok)
-        end
+      it 'returns status 401 Unauthorized' do
+        expect(response).to have_http_status(:unauthorized)
       end
-    end
-
-    context 'when unauthenticated user' do
-      let(:user) { FactoryBot.create(:user) }
-      let(:flight) { FactoryBot.create(:flight) }
-
-      context 'when params are valid' do
-        before do
-          Booking.create(flight: flight,
-                         user: user,
-                         no_of_seats: 2,
-                         seat_price: 100)
-          get '/api/bookings', headers: { Authorization: 'wrong_token' }
-        end
-
-        it 'returns status 401 Unauthorized' do
-          expect(response).to have_http_status(:unauthorized)
-        end
-        it 'returns token is invalid error' do
-          expect(json_body[:errors][:token]).to eq(['is invalid'])
-        end
+      it 'returns token is invalid error' do
+        expect(json_body[:errors][:token]).to eq(['is invalid'])
       end
     end
   end
@@ -56,46 +49,61 @@ RSpec.describe 'Bookings API', type: :request do
                      seat_price: 100)
     end
 
-    context 'when authenticated user' do
-      context 'when params are valid' do
-        before do
-          get "/api/bookings/#{booking.id}",
-              headers: { Authorization: user.token }
-        end
-
-        it 'returns a single booking' do
-          expect(json_body[:booking]).to include(:seat_price)
-        end
-        it 'returns status OK' do
-          expect(response).to have_http_status(:ok)
-        end
+    context 'when authenticated user and valid params' do
+      before do
+        get "/api/bookings/#{booking.id}",
+            headers: { Authorization: user.token }
       end
 
-      context 'when params are invalid' do
-        before do
-          get '/api/bookings/wrong_id',
-              headers: { Authorization: user.token }
-        end
-
-        it 'returns stauts 400 Bad request)' do
-          expect(response).to have_http_status(:bad_request)
-        end
+      it 'returns a single booking' do
+        expect(json_body[:booking]).to include(:seat_price)
+      end
+      it 'returns status OK' do
+        expect(response).to have_http_status(:ok)
       end
     end
 
-    context 'when unauthorized user' do
-      context 'when params are valid' do
-        before do
-          get "/api/bookings/#{booking.id}",
-              headers: { Authorization: 'wrong_token' }
-        end
+    context 'when authenticated and params are invalid' do
+      before do
+        get '/api/bookings/wrong_id',
+            headers: { Authorization: user.token }
+      end
 
-        it 'returns status 401 Unauthorized' do
-          expect(response).to have_http_status(:unauthorized)
-        end
-        it 'returns token is invalid error' do
-          expect(json_body[:errors][:token]).to eq(['is invalid'])
-        end
+      it 'returns stauts 400 Bad request)' do
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
+
+    context 'when unauthorized user and valid params' do
+      before do
+        get "/api/bookings/#{booking.id}",
+            headers: { Authorization: 'wrong_token' }
+      end
+
+      it 'returns status 401 Unauthorized' do
+        expect(response).to have_http_status(:unauthorized)
+      end
+      it 'returns token is invalid error' do
+        expect(json_body[:errors][:token]).to eq(['is invalid'])
+      end
+    end
+
+    context 'when user is authenticated but unauthorized' do
+      let(:user2) { FactoryBot.create(:user) }
+      let(:booking2) do
+        Booking.create(flight: flight,
+                       user: user2,
+                       no_of_seats: 2,
+                       seat_price: 100)
+      end
+
+      before do
+        get "/api/bookings/#{booking2.id}",
+            headers: { Authorization: user.token }
+      end
+
+      it 'returns status 403 Forbidden' do
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end
@@ -145,40 +153,36 @@ RSpec.describe 'Bookings API', type: :request do
                      seat_price: 100)
     end
 
-    context 'when user is authenticated' do
+    context 'when user is authenticated and params are valid' do
       before do
         put "/api/bookings/#{booking.id}",
             params: { booking: { no_of_seats: 3 } },
             headers: { Authorization: user.token }
       end
 
-      context 'when params are valid' do
-        it 'updates a booking' do
-          expect(json_body[:booking]).to include(no_of_seats: 3)
-        end
-        it 'checks existance of flight_id attribute' do
-          expect(json_body[:booking]).to include(:flight_id)
-        end
-        it 'returns status OK' do
-          expect(response).to have_http_status(:ok)
-        end
+      it 'updates a booking' do
+        expect(json_body[:booking]).to include(no_of_seats: 3)
+      end
+      it 'checks existance of flight_id attribute' do
+        expect(json_body[:booking]).to include(:flight_id)
+      end
+      it 'returns status OK' do
+        expect(response).to have_http_status(:ok)
       end
     end
 
-    context 'when user is unauthenticated' do
-      context 'when params are valid' do
-        before do
-          put "/api/bookings/#{booking.id}",
-              params: { booking: { no_of_seats: 3 } },
-              headers: { Authorization: 'wrong_token' }
-        end
+    context 'when user is unauthenticated and paras are valid' do
+      before do
+        put "/api/bookings/#{booking.id}",
+            params: { booking: { no_of_seats: 3 } },
+            headers: { Authorization: 'wrong_token' }
+      end
 
-        it 'returns status 401 Unauthorized' do
-          expect(response).to have_http_status(:unauthorized)
-        end
-        it 'returns token is invalid error' do
-          expect(json_body[:errors][:token]).to eq(['is invalid'])
-        end
+      it 'returns status 401 Unauthorized' do
+        expect(response).to have_http_status(:unauthorized)
+      end
+      it 'returns token is invalid error' do
+        expect(json_body[:errors][:token]).to eq(['is invalid'])
       end
     end
   end
@@ -193,35 +197,33 @@ RSpec.describe 'Bookings API', type: :request do
                      seat_price: 100)
     end
 
-    context 'when user is authenticated' do
+    context 'when user is authenticated and params are valid' do
       before { booking }
 
-      context 'when params are valid' do
-        it 'deletes a booking' do
-          expect do
-            delete "/api/bookings/#{booking.id}",
-                   headers: { Authorization: user.token }
-          end.to change(Booking, :count).by(-1)
-        end
-        it 'returns status No content' do
+      it 'deletes a booking' do
+        expect do
           delete "/api/bookings/#{booking.id}",
                  headers: { Authorization: user.token }
-          expect(response).to have_http_status(:no_content)
-        end
+        end.to change(Booking, :count).by(-1)
       end
+      it 'returns status No content' do
+        delete "/api/bookings/#{booking.id}",
+               headers: { Authorization: user.token }
+        expect(response).to have_http_status(:no_content)
+      end
+    end
 
-      context 'when params are invalid' do
-        it 'does not delete booking' do
-          expect do
-            delete '/api/bookings/wrong_booking',
-                   headers: { Authorization: user.token }
-          end.to change(Booking, :count).by(0)
-        end
-        it 'returns status Bad request' do
-          delete '/api/users/wrong_user',
+    context 'when user is authenticated authenticated params are invalid' do
+      it 'does not delete booking' do
+        expect do
+          delete '/api/bookings/wrong_booking',
                  headers: { Authorization: user.token }
-          expect(response).to have_http_status(:bad_request)
-        end
+        end.to change(Booking, :count).by(0)
+      end
+      it 'returns status Bad request' do
+        delete '/api/users/wrong_user',
+               headers: { Authorization: user.token }
+        expect(response).to have_http_status(:bad_request)
       end
     end
 
