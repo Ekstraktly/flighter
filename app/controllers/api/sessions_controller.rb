@@ -8,7 +8,8 @@ module Api
       if @user.authenticate(params[:session][:password])
         render json: { session: @session }, status: :created
       else
-        render json: { 'errors': { 'credentials': ['are invalid'] } }, status: :bad_request
+        render json: { 'errors': { 'credentials': ['are invalid'] } },
+               status: :bad_request
       end
     end
 
