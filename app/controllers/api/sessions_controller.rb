@@ -1,5 +1,8 @@
 module Api
   class SessionsController < ApplicationController
+    before_action :authentificate, only: [:index, :show, :update, :destroy]
+    before_action :current_user, only: [:index, :show, :update, :destroy]
+
     def create
       user_session
       if @user.authenticate(params[:session][:password])

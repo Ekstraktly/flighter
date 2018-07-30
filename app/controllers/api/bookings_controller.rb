@@ -1,5 +1,8 @@
 module Api
   class BookingsController < ApplicationController
+    before_action :authentificate, only: [:index, :show, :update, :destroy, :create]
+    before_action :current_user, only: [:index, :show, :update, :destroy, :create]
+
     def index
       render json: Booking.select { |booking|
         booking.user_id == @current_user.id
@@ -12,7 +15,7 @@ module Api
         if @booking.user_id == @current_user.id
           render json: @booking
         else
-          render json: { 'errors': { 'resource': 'is forbidden' } },
+          render json: { 'errors': { 'resource': ['is forbidden'] } },
                  status: :forbidden
         end
       else
@@ -34,11 +37,14 @@ module Api
 
     def update
       booking
-      if @booking.update(booking_params) &&
-         @booking.user_id == @current_user.id
-        render json: @booking, status: :ok
+      if @booking.user_id == @current_user.id
+        if @booking.update(booking_params)
+          render json: @booking, status: :ok
+        else
+          render json: { errors: booking.errors }, status: :bad_request
+        end
       else
-        render json: { 'errors': { 'resource': 'is forbidden' } },
+        render json: { 'errors': { 'resource': ['is forbidden'] } },
                status: :forbidden
       end
     end
@@ -49,7 +55,7 @@ module Api
         if @booking.user_id == @current_user.id
           @booking.destroy
         else
-          render json: { 'errors': { 'resource': 'is forbidden' } },
+          render json: { 'errors': { 'resource': ['is forbidden'] } },
                  status: :forbidden
         end
       else

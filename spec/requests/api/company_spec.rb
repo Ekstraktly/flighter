@@ -134,12 +134,12 @@ RSpec.describe 'Companys API', type: :request do
           expect do
             post '/api/companies', params: { company: company_params },
                                    headers: { Authorization: 'wrong_token' }
-          end.to change(Company, :count).by(1)
+          end.to change(Company, :count).by(0)
         end
-        it 'returns status Bad request' do
+        it 'returns status Unauthorized' do
           post '/api/companies', params: { company: { name: '' } },
                                  headers: { Authorization: 'wrong_token' }
-          expect(response).to have_http_status(:bad_request)
+          expect(response).to have_http_status(:unauthorized)
         end
       end
     end

@@ -1,5 +1,8 @@
 module Api
   class UsersController < ApplicationController
+    before_action :authentificate, only: [:index, :show, :update, :destroy]
+    before_action :current_user, only: [:index, :show, :update, :destroy]
+
     def index
       render json: User.select { |user|
         user.id == @current_user.id

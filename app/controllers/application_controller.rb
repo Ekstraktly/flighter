@@ -4,8 +4,6 @@ class ApplicationController < ActionController::Base
                                                    :update,
                                                    :create,
                                                    :destroy]
-  before_action :authentificate, only: [:index, :show, :update, :destroy]
-  before_action :current_user, only: [:index, :show, :update, :destroy]
 
   private
 
