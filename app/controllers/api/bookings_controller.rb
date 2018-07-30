@@ -48,7 +48,8 @@ module Api
     def update
       find_booking
       if @find_booking.user_id == @current_user.id
-        if @find_booking.update(booking_params)
+        if @find_booking.update(booking_params
+                                .merge(user_id: @current_user.id))
           render json: @find_booking, status: :ok
         else
           render json: { errors: find_booking.errors }, status: :bad_request
