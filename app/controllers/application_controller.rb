@@ -3,12 +3,12 @@ class ApplicationController < ActionController::Base
                                                    :show,
                                                    :update,
                                                    :destroy]
-  before_action :authorize, only: [:index, :show, :update, :destroy]
-  before_action :current_user
+  before_action :authentificate, only: [:index, :show, :update, :destroy]
+  before_action :current_user, only: [:index, :show, :update, :destroy]
 
   private
 
-  def authorize
+  def authentificate
     return if User.find_by(token: request.headers['Authorization'])
     render json: { 'errors': { 'token': 'is invalid' } }, status: :unauthorized
   end

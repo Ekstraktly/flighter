@@ -6,7 +6,11 @@ module Api
 
     def show
       company
-      render json: @company
+      if @company
+        render json: @company
+      else
+        render json: { errors: company.errors }, status: :bad_request
+      end
     end
 
     def create
@@ -29,8 +33,11 @@ module Api
 
     def destroy
       company
-      @company.destroy
-      head :no_content
+      if @company
+        @company.destroy
+      else
+        render json: { errors: @current_user.errors }, status: :bad_request
+      end
     end
 
     private
@@ -40,7 +47,7 @@ module Api
     end
 
     def company
-      @company ||= Company.find(params[:id])
+      @company ||= Company.find_by id: params[:id]
     end
   end
 end

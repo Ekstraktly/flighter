@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 2018_07_25_130902) do
     t.string "password_digest"
     t.string "token", default: "", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["token"], name: "index_users_on_token", unique: true
   end
 
   add_foreign_key "bookings", "flights"

@@ -6,7 +6,11 @@ module Api
 
     def show
       flight
-      render json: @flight
+      if @flight
+        render json: @flight
+      else
+        render json: { errors: @current_user.errors }, status: :bad_request
+      end
     end
 
     def create
@@ -29,8 +33,11 @@ module Api
 
     def destroy
       flight
-      @flight.destroy
-      head :no_content
+      if @flight
+        @flight.destroy
+      else
+        render json: { errors: @current_user.errors }, status: :bad_request
+      end
     end
 
     private
@@ -45,7 +52,7 @@ module Api
     end
 
     def flight
-      @flight ||= Flight.find(params[:id])
+      @flight ||= Flight.find_by id: params[:id]
     end
   end
 end

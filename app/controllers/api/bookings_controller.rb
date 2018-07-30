@@ -8,22 +8,27 @@ module Api
 
     def show
       booking
-      if @booking.user_id == @current_user.id
-        render json: @booking
+      if @booking
+        if @booking.user_id == @current_user.id
+          render json: @booking
+        else
+          render json: { 'errors': { 'resource': 'is forbidden' } },
+                 status: :forbidden
+        end
       else
-        render json: { 'errors': { 'resource': 'is forbidden' } },
-               status: :forbidden
+        render json: { errors: @current_user.errors }, status: :bad_request
       end
     end
 
     def create
+      current_user
       user = User.find_by(token: @current_user.token)
       booking = create_booking
       if user && booking.user_id == @current_user.id
         booking.save
         render json: booking, status: :created
       else
-        render json: { errors: booking.errors }, status: :unauthorized
+        render json: { errors: @current_user.errors }, status: :bad_request
       end
     end
 
@@ -40,10 +45,15 @@ module Api
 
     def destroy
       booking
-      if @booking.user_id == @current_user.id
-        @booking.destroy
+      if @booking
+        if @booking.user_id == @current_user.id
+          @booking.destroy
+        else
+          render json: { 'errors': { 'resource': 'is forbidden' } },
+                 status: :forbidden
+        end
       else
-        render json: { errors: booking.errors }, status: :unauthorized
+        render json: { errors: @current_user.errors }, status: :bad_request
       end
     end
 
@@ -57,7 +67,7 @@ module Api
     end
 
     def booking
-      @booking ||= Booking.find(params[:id])
+      @booking ||= Booking.find_by id: params[:id]
     end
 
     def create_booking

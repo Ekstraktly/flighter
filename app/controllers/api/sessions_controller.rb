@@ -10,8 +10,13 @@ module Api
     end
 
     def destroy
-      @doomed_session = Session.find_by(token: request.headers['Authorization'])
-      @doomed_session.destroy
+      user = User.find_by(token: request.headers['Authorization'])
+      if user
+        user.regenerate_token
+      else
+        render json: { 'errors': { 'token': 'is invalid' } },
+               status: :unauthorized
+      end
     end
 
     private
