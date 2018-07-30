@@ -5,10 +5,7 @@ RSpec.describe 'Bookings API', type: :request do
     let(:flight) { FactoryBot.create(:flight) }
 
     before do
-      Booking.create(flight: flight,
-                     user: user,
-                     no_of_seats: 2,
-                     seat_price: 100)
+      FactoryBot.create(:booking, user: user, flight: flight)
       get '/api/bookings', headers: { Authorization: user.token }
     end
 
@@ -23,10 +20,7 @@ RSpec.describe 'Bookings API', type: :request do
 
     context 'when unauthenticated user and valid params' do
       before do
-        Booking.create(flight: flight,
-                       user: user,
-                       no_of_seats: 2,
-                       seat_price: 100)
+        FactoryBot.create(:booking, user: user, flight: flight)
         get '/api/bookings', headers: { Authorization: 'wrong_token' }
       end
 
@@ -63,17 +57,6 @@ RSpec.describe 'Bookings API', type: :request do
       end
     end
 
-    context 'when authenticated and params are invalid' do
-      before do
-        get '/api/bookings/wrong_id',
-            headers: { Authorization: user.token }
-      end
-
-      it 'returns stauts 400 Bad request)' do
-        expect(response).to have_http_status(:bad_request)
-      end
-    end
-
     context 'when unauthorized user and valid params' do
       before do
         get "/api/bookings/#{booking.id}",
@@ -89,16 +72,16 @@ RSpec.describe 'Bookings API', type: :request do
     end
 
     context 'when user is authenticated but unauthorized' do
-      let(:user2) { FactoryBot.create(:user) }
-      let(:booking2) do
+      let(:other_user) { FactoryBot.create(:user) }
+      let(:other_booking) do
         Booking.create(flight: flight,
-                       user: user2,
+                       user: other_user,
                        no_of_seats: 2,
                        seat_price: 100)
       end
 
       before do
-        get "/api/bookings/#{booking2.id}",
+        get "/api/bookings/#{other_booking.id}",
             headers: { Authorization: user.token }
       end
 
@@ -210,20 +193,6 @@ RSpec.describe 'Bookings API', type: :request do
         delete "/api/bookings/#{booking.id}",
                headers: { Authorization: user.token }
         expect(response).to have_http_status(:no_content)
-      end
-    end
-
-    context 'when user is authenticated authenticated params are invalid' do
-      it 'does not delete booking' do
-        expect do
-          delete '/api/bookings/wrong_booking',
-                 headers: { Authorization: user.token }
-        end.to change(Booking, :count).by(0)
-      end
-      it 'returns status Bad request' do
-        delete '/api/users/wrong_user',
-               headers: { Authorization: user.token }
-        expect(response).to have_http_status(:bad_request)
       end
     end
 

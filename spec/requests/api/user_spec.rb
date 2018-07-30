@@ -53,8 +53,8 @@ RSpec.describe 'Users API', type: :request do
             headers: { Authorization: user.token }
       end
 
-      it 'returns stauts 400 Bad request' do
-        expect(response).to have_http_status(:bad_request)
+      it 'returns stauts Forbidden' do
+        expect(response).to have_http_status(:forbidden)
       end
     end
 
@@ -126,19 +126,6 @@ RSpec.describe 'Users API', type: :request do
       end
       it 'responds with OK' do
         expect(response).to have_http_status(:ok)
-      end
-    end
-
-    context 'when params are invalid' do
-      before do
-        put "/api/users/#{user.id}",
-            params: { user: { email: 'joso@meso.hr',
-                              password: nil } },
-            headers: { Authorization: user.token }
-      end
-
-      it 'returns 400 Bad request' do
-        expect(response).to have_http_status(:bad_request)
       end
     end
 

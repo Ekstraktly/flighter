@@ -5,22 +5,16 @@ module Api
                                           :update,
                                           :destroy,
                                           :create]
-    before_action :current_user, only: [:index,
-                                        :show,
-                                        :update,
-                                        :destroy,
-                                        :create]
 
     def index
       render json: Flight.all
     end
 
     def show
-      flight
-      if @flight
-        render json: @flight
+      if flight
+        render json: flight
       else
-        render json: { errors: @current_user.errors }, status: :bad_request
+        render json: { errors: current_user.errors }, status: :bad_request
       end
     end
 
@@ -34,20 +28,18 @@ module Api
     end
 
     def update
-      flight
-      if @flight.update(flight_params)
-        render json: @flight, status: :ok
+      if flight.update(flight_params)
+        render json: flight, status: :ok
       else
-        render json: { errors: @flight.errors }, status: :bad_request
+        render json: { errors: flight.errors }, status: :bad_request
       end
     end
 
     def destroy
-      flight
-      if @flight
-        @flight.destroy
+      if flight
+        flight.destroy
       else
-        render json: { errors: @current_user.errors }, status: :bad_request
+        render json: { errors: current_user.errors }, status: :bad_request
       end
     end
 

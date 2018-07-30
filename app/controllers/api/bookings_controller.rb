@@ -5,72 +5,40 @@ module Api
                                           :update,
                                           :destroy,
                                           :create]
-    before_action :current_user, only: [:index,
-                                        :show,
-                                        :update,
-                                        :destroy,
-                                        :create]
+    before_action :authorize, only: [:update, :destroy, :show]
 
     def index
-      render json: Booking.select { |booking|
-        booking.user_id == @current_user.id
-      }
+      render json: current_user.bookings
     end
 
     def show
-      find_booking
-      if @find_booking
-        if @find_booking.user_id == @current_user.id
-          render json: @find_booking
-        else
-          render json: { 'errors': { 'resource': ['is forbidden'] } },
-                 status: :forbidden
-        end
+      if booking
+        render json: booking
       else
-        render json: { errors: @current_user.errors }, status: :bad_request
+        render json: { 'errors': { 'resource': ['is forbidden'] } },
+               status: :forbidden
       end
     end
 
     def create
       booking = create_booking
-      if booking.user_id == @current_user.id
-        if booking.save
-          render json: booking, status: :created
-        else
-          render json: { errors: booking.errors }, status: :bad_request
-        end
+      if booking.save
+        render json: booking, status: :created
       else
-        render json: { 'errors': { 'resource': ['is forbidden'] } },
-               status: :forbidden
+        render json: { errors: booking.errors }, status: :bad_request
       end
     end
 
     def update
-      find_booking
-      if @find_booking.user_id == @current_user.id
-        if @find_booking.update(booking_params.merge(user_id: @current_user.id))
-          render json: @find_booking, status: :ok
-        else
-          render json: { errors: find_booking.errors }, status: :bad_request
-        end
+      if booking.update(booking_params)
+        render json: booking
       else
-        render json: { 'errors': { 'resource': ['is forbidden'] } },
-               status: :forbidden
+        render json: { errors: booking.errors }, status: :bad_request
       end
     end
 
     def destroy
-      find_booking
-      if @find_booking
-        if @find_booking.user_id == @current_user.id
-          @find_booking.destroy
-        else
-          render json: { 'errors': { 'resource': ['is forbidden'] } },
-                 status: :forbidden
-        end
-      else
-        render json: { errors: @current_user.errors }, status: :bad_request
-      end
+      booking&.destroy
     end
 
     private
@@ -82,15 +50,21 @@ module Api
                                       :seat_price)
     end
 
-    def find_booking
-      @find_booking ||= Booking.find_by id: params[:id]
+    def booking
+      @booking ||= Booking.find_by id: params[:id]
     end
 
     def create_booking
       Booking.new(flight_id: booking_params[:flight_id],
-                  user_id: @current_user.id,
+                  user_id: current_user.id,
                   no_of_seats: booking_params[:no_of_seats],
                   seat_price: booking_params[:seat_price])
+    end
+
+    def authorize
+      return if booking.user == current_user
+      render json: { errors: { resource: ['is forbidden'] } },
+             status: :forbidden
     end
   end
 end

@@ -1,23 +1,18 @@
 module Api
   class UsersController < ApplicationController
     before_action :authentificate, only: [:index, :show, :update, :destroy]
-    before_action :current_user, only: [:index, :show, :update, :destroy]
+    before_action :authorize, only: [:update, :destroy, :show]
 
     def index
       render json: User.all
     end
 
     def show
-      user
-      if @user
-        if @user.id == @current_user.id
-          render json: @user
-        else
-          render json: { 'errors': { 'resource': ['is forbidden'] } },
-                 status: :forbidden
-        end
+      if user
+        render json: user
       else
-        render json: { errors: @current_user.errors }, status: :bad_request
+        render json: { 'errors': { 'resource': ['is forbidden'] } },
+               status: :forbidden
       end
     end
 
@@ -31,31 +26,15 @@ module Api
     end
 
     def update
-      user
-      if @user.id == @current_user.id
-        if @user.update(user_params)
-          render json: @user, status: :ok
-        else
-          render json: { errors: user.errors }, status: :bad_request
-        end
+      if user.update(user_params)
+        render json: user, status: :ok
       else
-        render json: { 'errors': { 'resource': ['is forbidden'] } },
-               status: :forbidden
+        render json: { errors: user.errors }, status: :bad_request
       end
     end
 
     def destroy
-      user
-      if @user
-        if @user.id == @current_user.id
-          @user.destroy
-        else
-          render json: { 'errors': { 'resource': ['is forbidden'] } },
-                 status: :forbidden
-        end
-      else
-        render json: { errors: @current_user.errors }, status: :bad_request
-      end
+      user&.destroy
     end
 
     private
@@ -69,6 +48,12 @@ module Api
 
     def user
       @user ||= User.find_by id: params[:id]
+    end
+
+    def authorize
+      return if user == current_user
+      render json: { errors: { resource: ['is forbidden'] } },
+             status: :forbidden
     end
   end
 end

@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   private
 
   def authentificate
-    return if User.find_by(token: request.headers['Authorization'])
+    return if current_user
     render json: { 'errors': { 'token': ['is invalid'] } },
            status: :unauthorized
   end

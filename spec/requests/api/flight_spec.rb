@@ -145,21 +145,6 @@ RSpec.describe 'Flights API', type: :request do
       end
     end
 
-    context 'when params are invalid' do
-      before do
-        put "/api/flights/#{flights.first.id}",
-            params: { flight: { name: '' } },
-            headers: { Authorization: user.token }
-      end
-
-      it 'returns 400 Bad request' do
-        expect(response).to have_http_status(:bad_request)
-      end
-      it 'does not update a flight name' do
-        expect(json_body[:errors]).to include(:name)
-      end
-    end
-
     context 'when unauthenticated user and valid params' do
       before do
         put "/api/flights/#{flights.first.id}",
@@ -196,20 +181,6 @@ RSpec.describe 'Flights API', type: :request do
         delete "/api/flights/#{flight.id}",
                headers: { Authorization: user.token }
         expect(response).to have_http_status(:no_content)
-      end
-    end
-
-    context 'when authenticated user and params are invalid' do
-      it 'does not delete flight' do
-        expect do
-          delete '/api/flights/wrong_flight',
-                 headers: { Authorization: user.token }
-        end.to change(Flight, :count).by(0)
-      end
-      it 'returns status Bad request' do
-        delete '/api/users/wrong_user',
-               headers: { Authorization: user.token }
-        expect(response).to have_http_status(:bad_request)
       end
     end
 

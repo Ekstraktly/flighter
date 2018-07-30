@@ -5,20 +5,14 @@ module Api
                                           :update,
                                           :destroy,
                                           :create]
-    before_action :current_user, only: [:index,
-                                        :show,
-                                        :update,
-                                        :destroy,
-                                        :create]
 
     def index
       render json: Company.all
     end
 
     def show
-      company
-      if @company
-        render json: @company
+      if company
+        render json: company
       else
         render json: { errors: company.errors }, status: :bad_request
       end
@@ -34,20 +28,18 @@ module Api
     end
 
     def update
-      company
-      if @company.update(company_params)
-        render json: @company, status: :ok
+      if company.update(company_params)
+        render json: company, status: :ok
       else
-        render json: { errors: @company.errors }, status: :bad_request
+        render json: { errors: company.errors }, status: :bad_request
       end
     end
 
     def destroy
-      company
-      if @company
-        @company.destroy
+      if company
+        company.destroy
       else
-        render json: { errors: @current_user.errors }, status: :bad_request
+        render json: { errors: current_user.errors }, status: :bad_request
       end
     end
 
