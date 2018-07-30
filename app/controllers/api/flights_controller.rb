@@ -1,7 +1,15 @@
 module Api
   class FlightsController < ApplicationController
-    before_action :authentificate, only: [:index, :show, :update, :destroy, :create]
-    before_action :current_user, only: [:index, :show, :update, :destroy, :create]
+    before_action :authentificate, only: [:index,
+                                          :show,
+                                          :update,
+                                          :destroy,
+                                          :create]
+    before_action :current_user, only: [:index,
+                                        :show,
+                                        :update,
+                                        :destroy,
+                                        :create]
 
     def index
       render json: Flight.all
