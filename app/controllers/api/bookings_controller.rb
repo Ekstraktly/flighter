@@ -24,9 +24,8 @@ module Api
     end
 
     def create
-      user = User.find_by(token: @current_user.token)
       booking = create_booking
-      if user && booking.user_id == @current_user.id
+      if booking.user_id == @current_user.id
         booking.save
         render json: booking, status: :created
       else
