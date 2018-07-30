@@ -106,8 +106,8 @@ RSpec.describe 'Bookings API', type: :request do
     let(:booking_params) do
       { flight_id: flight.id.to_s,
         user_id: user.id.to_s,
-        no_of_seats: '2',
-        seat_price: '200' }
+        no_of_seats: 2,
+        seat_price: 200 }
     end
 
     context 'when params are valid' do
@@ -115,7 +115,7 @@ RSpec.describe 'Bookings API', type: :request do
         expect do
           post '/api/bookings', params: { booking: booking_params },
                                 headers: { Authorization: user.token }
-        end.to change(Booking, :count).by(1)
+        end.to change(user.bookings, :count).by(1)
       end
       it 'checks existance of seat_price' do
         post '/api/bookings', params: { booking: booking_params },

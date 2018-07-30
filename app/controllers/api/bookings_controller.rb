@@ -30,7 +30,7 @@ module Api
         booking.save
         render json: booking, status: :created
       else
-        render json: { errors: @current_user.errors }, status: :bad_request
+        render json: { errors: booking.errors }, status: :bad_request
       end
     end
 
