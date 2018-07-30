@@ -32,8 +32,8 @@ module Api
     end
 
     def create
-      booking = Booking.new(booking_params)
-      if params[:booking][:user_id].to_i == @current_user.id
+      booking = create_booking
+      if booking.user_id == @current_user.id
         if booking.save
           render json: booking, status: :created
         else
@@ -84,6 +84,13 @@ module Api
 
     def find_booking
       @find_booking ||= Booking.find_by id: params[:id]
+    end
+
+    def create_booking
+      Booking.new(flight_id: booking_params[:flight_id],
+                  user_id: @current_user.id,
+                  no_of_seats: booking_params[:no_of_seats],
+                  seat_price: booking_params[:seat_price])
     end
   end
 end
