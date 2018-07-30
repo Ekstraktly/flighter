@@ -12,7 +12,7 @@ module Api
         if @user.id == @current_user.id
           render json: @user
         else
-          render json: { 'errors': { 'resource': 'is forbidden' } },
+          render json: { 'errors': { 'resource': ['is forbidden'] } },
                  status: :forbidden
         end
       else
@@ -38,7 +38,7 @@ module Api
           render json: { errors: user.errors }, status: :bad_request
         end
       else
-        render json: { 'errors': { 'resource': 'is forbidden' } },
+        render json: { 'errors': { 'resource': ['is forbidden'] } },
                status: :forbidden
       end
     end
@@ -49,7 +49,7 @@ module Api
         if @user.id == @current_user.id
           @user.destroy
         else
-          render json: { 'errors': { 'resource': 'is forbidden' } },
+          render json: { 'errors': { 'resource': ['is forbidden'] } },
                  status: :forbidden
         end
       else

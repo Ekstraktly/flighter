@@ -32,8 +32,8 @@ RSpec.describe 'Sessions API', type: :request do
                                                   password: 'wrong_password' } }
       end
 
-      it 'status is 401 Unauthorized' do
-        expect(response).to have_http_status(:unauthorized)
+      it 'status is 400 Bad request' do
+        expect(response).to have_http_status(:bad_request)
       end
     end
   end

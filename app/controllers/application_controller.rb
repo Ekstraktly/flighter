@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   before_action :verify_authenticity_token, only: [:index,
                                                    :show,
                                                    :update,
+                                                   :create,
                                                    :destroy]
   before_action :authentificate, only: [:index, :show, :update, :destroy]
   before_action :current_user, only: [:index, :show, :update, :destroy]
