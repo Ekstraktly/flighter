@@ -33,7 +33,7 @@ module Api
 
     def create
       booking = Booking.new(booking_params)
-      if params[:booking][:user_id].to_i == @current_user.id
+      if @current_user.id
         if booking.save
           render json: booking, status: :created
         else
