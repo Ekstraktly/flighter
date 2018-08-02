@@ -8,9 +8,8 @@ class BookingSerializer < ActiveModel::Serializer
   attribute :no_of_seats
   attribute :seat_price
   attribute :total_price
-  attribute :flight, serializer: FlightSerializer
 
-  belongs_to :user, serializer: UserSerializer
+  belongs_to :flight, serializer: FlightSerializer
 
   def total_price
     object.seat_price * object.no_of_seats
