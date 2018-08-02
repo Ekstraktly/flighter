@@ -67,6 +67,7 @@ module Api
                      params[:first_name].to_s.downcase,
                      params[:last_name].to_s.downcase,
                      params[:email].to_s.downcase)
+          .order(:email)
           .includes(:bookings)
     end
   end
