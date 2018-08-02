@@ -5,6 +5,7 @@ class LightBookingSerializer < ActiveModel::Serializer
   attribute :company_name
   attribute :no_of_seats
   attribute :seat_price
+  attribute :flys_at
 
   belongs_to :flight, serializer: FlightSerializer
 
