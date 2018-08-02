@@ -7,7 +7,15 @@ module Api
                                           :create]
 
     def index
-      render json: Flight.all
+      render json:
+        if params[:company_id]
+          Flight.company_flights(params[:company_id])
+        else
+          Flight.all
+            .where('flys_at > ?', Time.zone.now)
+            .order(:flys_at, :name, :created_at)
+                .includes(:company)
+        end
     end
 
     def show

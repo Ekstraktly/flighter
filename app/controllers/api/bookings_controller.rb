@@ -8,7 +8,16 @@ module Api
     before_action :authorize, only: [:update, :destroy, :show]
 
     def index
-      render json: current_user.bookings
+      render json:
+        if params[:filter] == 'active'
+          current_user.bookings.active
+        else
+          current_user.bookings.joins(:flight)
+            .order('flights.flys_at',
+                   'flights.name',
+                   :created_at)
+                      .includes(:flight, :user)
+        end
     end
 
     def show

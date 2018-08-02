@@ -6,9 +6,27 @@ class Booking < ApplicationRecord
   validates :no_of_seats, presence: true,
                           numericality: { greater_than: 0 }
   validate :past_flight
+  validate :overbooked
+
+  scope :active, lambda {
+    joins(:flight)
+      .where('flys_at > ?', Time.zone.now)
+      .all
+      .order('flights.flys_at',
+             'flights.name',
+             :created_at)
+      .includes(:flight, :user)
+  }
 
   def past_flight
     return if flight && flight.flys_at > Time.current
     errors.add(:flys_at, 'must be booked in the future')
+  end
+
+  def overbooked
+    return if flight &&
+              (no_of_seats + Booking.where(flight_id: flight.id)
+                                   .sum(:no_of_seats)) <= flight.no_of_seats
+    errors.add(:no_of_seats, 'not enough seats on this flight')
   end
 end

@@ -9,6 +9,11 @@ Rails.application.routes.draw do
     post '/session', to: 'sessions#create'
     delete '/session', to: 'sessions#destroy'
     # resource :session, only: [:create, :destroy]
+
+    namespace :statistics do
+      get '/flights', to: 'flights#index'
+      get '/companies', to: 'companies#index'
+    end
   end
   get '/world-cup', to: 'application#world_cup'
 end

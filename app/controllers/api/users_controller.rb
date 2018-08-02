@@ -4,7 +4,12 @@ module Api
     before_action :authorize, only: [:update, :destroy, :show]
 
     def index
-      render json: User.all
+      render json:
+        if params[:first_name] || params[:last_name] || params[:email]
+          find_user(params)
+        else
+          User.all.order(:email).includes(:bookings)
+        end
     end
 
     def show
@@ -54,6 +59,15 @@ module Api
       return if user == current_user
       render json: { errors: { resource: ['is forbidden'] } },
              status: :forbidden
+    end
+
+    def find_user(params)
+      User.all.where('lower(first_name) = ? OR lower(last_name) = ? OR
+                      lower(email) = ?',
+                     params[:first_name].to_s.downcase,
+                     params[:last_name].to_s.downcase,
+                     params[:email].to_s.downcase)
+          .includes(:bookings)
     end
   end
 end
