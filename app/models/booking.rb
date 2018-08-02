@@ -25,8 +25,13 @@ class Booking < ApplicationRecord
 
   def overbooked
     return if flight &&
-              (no_of_seats + Booking.where(flight_id: flight.id)
-                                   .sum(:no_of_seats)) <= flight.no_of_seats
+              (total_booked_seats_on_flight <= flight.no_of_seats)
     errors.add(:no_of_seats, 'not enough seats on this flight')
+  end
+
+  def total_booked_seats_on_flight
+    no_of_seats.to_i + Booking.where.not(user_id: user.id)
+                       .where(flight_id: flight.id)
+                              .sum(:no_of_seats)
   end
 end

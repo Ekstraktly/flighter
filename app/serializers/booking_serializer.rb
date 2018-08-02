@@ -1,7 +1,7 @@
 class BookingSerializer < ActiveModel::Serializer
   attribute :id
   attribute :flight_id
-  attribute :name
+  attribute :flight_name
   attribute :flys_at
   attribute :lands_at
   attribute :user_id
@@ -14,7 +14,7 @@ class BookingSerializer < ActiveModel::Serializer
     object.seat_price * object.no_of_seats
   end
 
-  def name
+  def flight_name
     object.flight.name
   end
 
