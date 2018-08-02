@@ -20,7 +20,7 @@ class Booking < ApplicationRecord
 
   def past_flight
     return if flight && flight.flys_at > Time.current
-    errors.add(:flys_at, 'must be booked in the future')
+    errors.add(:flight, 'must be booked in the future')
   end
 
   def overbooked

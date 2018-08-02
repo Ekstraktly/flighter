@@ -34,9 +34,9 @@ class Flight < ApplicationRecord
               Flight.where.not(id: id)
                     .where("company_id = ? AND
                            (flys_at, lands_at) OVERLAPS (?,?)",
-                           company.id,
+                           company_id,
                            flys_at,
                            lands_at).empty?
-    errors.add(:flys_at, "flights can't overlap")
+    errors.add(:lands_at, "flights can't overlap")
   end
 end
