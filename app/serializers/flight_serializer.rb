@@ -10,6 +10,8 @@ class FlightSerializer < ActiveModel::Serializer
   attribute :no_of_booked_seats
   attribute :current_price
 
+  belongs_to :company, serializer: CompanySerializer
+
   def no_of_booked_seats
     object.bookings.sum(:no_of_seats)
   end
