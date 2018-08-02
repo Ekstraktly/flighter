@@ -22,7 +22,7 @@ class FlightSerializer < ActiveModel::Serializer
 
   def current_price
     if days_to_flight(object.flys_at) >= 15
-      object.base_price
+      object.base_price.to_i
     else
       calculate_price(object.base_price, object.flys_at)
     end
@@ -33,12 +33,11 @@ class FlightSerializer < ActiveModel::Serializer
   end
 
   def calculate_price(base_price, flys_at)
-    if flys_at < Time.zone.now
+    if flys_at > Time.zone.now
       base_price +
-        (((15 - days_to_flight(flys_at)) / 15.0) * base_price)
-        .to_i
+        (((15.0 - days_to_flight(flys_at)) / 15.0) * base_price)
     else
-      object.base_price * 2
+      base_price * 2
     end
   end
 end
