@@ -30,7 +30,6 @@ module Api
     end
 
     def create
-      return unless flight
       booking = create_booking
       if booking.save
         render json: booking, status: :created
@@ -68,8 +67,8 @@ module Api
       Booking.new(flight_id: booking_params[:flight_id],
                   user_id: current_user.id,
                   no_of_seats: booking_params[:no_of_seats],
-                  seat_price: calculate_price(flight.base_price,
-                                              flight.flys_at))
+                  seat_price: calculate_price(flight&.base_price,
+                                              flight&.flys_at))
     end
 
     def authorize

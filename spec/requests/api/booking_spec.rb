@@ -115,15 +115,6 @@ RSpec.describe 'Bookings API', type: :request do
         expect(json_body[:booking]).to include(:seat_price)
       end
     end
-
-    context 'when params are invalid' do
-      it 'not change booking count' do
-        expect do
-          post '/api/bookings', params: { booking: { flight_id: 'asd' } },
-                                headers: { Authorization: user.token }
-        end.to change(Booking, :count).by(0)
-      end
-    end
   end
 
   describe 'UPDATE /api/bookings/:id' do
