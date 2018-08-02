@@ -5,7 +5,7 @@ class UserSerializer < ActiveModel::Serializer
   attribute :email
   attribute :no_of_seats
 
-  has_many :bookings, each_serializer: BookingSerializer
+  has_many :bookings, serializer: LightBookingSerializer
 
   def no_of_seats
     object.bookings.sum(:no_of_seats)
