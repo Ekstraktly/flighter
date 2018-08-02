@@ -1,6 +1,5 @@
 class LightBookingSerializer < ActiveModel::Serializer
   attribute :id
-  attribute :flight_id
   attribute :flight_name
   attribute :company_name
   attribute :no_of_seats
