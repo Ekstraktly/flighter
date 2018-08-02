@@ -125,17 +125,17 @@ RSpec.describe 'Flights API', type: :request do
 
   describe 'UPDATE /api/flights/:id' do
     let(:user) { FactoryBot.create(:user) }
-    let(:flights) { FactoryBot.create_list(:flight, 3) }
+    let(:flight) { FactoryBot.create(:flight) }
 
     context 'when authenticated user and valid params' do
       before do
-        put "/api/flights/#{flights.first.id}",
-            params: { flight: { name: 'Afrika Airlines' } },
+        put "/api/flights/#{flight.id}",
+            params: { flight: { name: 'Banana Airlines' } },
             headers: { Authorization: user.token }
       end
 
       it 'updates a flight' do
-        expect(json_body[:flight]).to include(name: 'Afrika Airlines')
+        expect(json_body[:flight]).to include(name: 'Banana Airlines')
       end
       it 'check existance of no_of_seats' do
         expect(json_body[:flight]).to include(:no_of_seats)
@@ -147,8 +147,8 @@ RSpec.describe 'Flights API', type: :request do
 
     context 'when unauthenticated user and valid params' do
       before do
-        put "/api/flights/#{flights.first.id}",
-            params: { flight: { name: 'Afrika Airlines' } },
+        put "/api/flights/#{flight.id}",
+            params: { flight: { name: 'Banana Airlines' } },
             headers: { Authorization: 'wrong_token' }
       end
 
