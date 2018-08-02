@@ -30,6 +30,7 @@ module Api
     end
 
     def create
+      return unless flight
       booking = create_booking
       if booking.save
         render json: booking, status: :created
@@ -55,8 +56,7 @@ module Api
     def booking_params
       params.require(:booking).permit(:flight_id,
                                       :user_id,
-                                      :no_of_seats,
-                                      :seat_price)
+                                      :no_of_seats)
     end
 
     def booking
@@ -64,16 +64,36 @@ module Api
     end
 
     def create_booking
+      return unless flight
       Booking.new(flight_id: booking_params[:flight_id],
                   user_id: current_user.id,
                   no_of_seats: booking_params[:no_of_seats],
-                  seat_price: booking_params[:seat_price])
+                  seat_price: calculate_price(flight.base_price,
+                                              flight.flys_at))
     end
 
     def authorize
       return if booking.user == current_user
       render json: { errors: { resource: ['is forbidden'] } },
              status: :forbidden
+    end
+
+    def calculate_price(base_price, flys_at)
+      if flys_at <= Time.zone.now
+        base_price +
+          (((15 - days_to_flight(flys_at)) / 15.0) * base_price)
+          .to_i
+      else
+        base_price * 2
+      end
+    end
+
+    def days_to_flight(flight_date)
+      ((flight_date - Time.zone.now) / (60 * 60 * 24)).to_i
+    end
+
+    def flight
+      @flight ||= Flight.find_by id: booking_params[:flight_id]
     end
   end
 end

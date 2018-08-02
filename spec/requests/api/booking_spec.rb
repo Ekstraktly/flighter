@@ -112,7 +112,7 @@ RSpec.describe 'Bookings API', type: :request do
       it 'checks existance of seat_price' do
         post '/api/bookings', params: { booking: booking_params },
                               headers: { Authorization: user.token }
-        expect(json_body[:booking]).to include(seat_price: 200)
+        expect(json_body[:booking]).to include(:seat_price)
       end
     end
 
