@@ -2,6 +2,7 @@ class BookingSerializer < ActiveModel::Serializer
   attribute :id
   attribute :flight_id
   attribute :flight_name
+  attribute :company_name
   attribute :flys_at
   attribute :lands_at
   attribute :user_id
@@ -25,5 +26,9 @@ class BookingSerializer < ActiveModel::Serializer
 
   def lands_at
     object.flight.lands_at
+  end
+
+  def company_name
+    object.flight.company.name
   end
 end
