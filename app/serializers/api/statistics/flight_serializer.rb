@@ -1,7 +1,7 @@
 module Api
   module Statistics
     class FlightSerializer < ActiveModel::Serializer
-      attribute :id
+      attribute :flight_id
       attribute :revenue
       attribute :no_of_booked_seats
       attribute :occupancy
@@ -19,6 +19,10 @@ module Api
       def occupancy
         "#{((no_of_booked_seats.to_d /
              object.no_of_seats.to_d) * 100.0).round(2)}%"
+      end
+
+      def flight_id
+        object.id
       end
     end
   end
