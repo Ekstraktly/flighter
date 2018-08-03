@@ -10,7 +10,7 @@ Rails.application.routes.draw do
 
     namespace :statistics do
       resources :flights, only: :index
-      resources :company, only: :index
+      resources :companies, only: :index
     end
   end
 end
