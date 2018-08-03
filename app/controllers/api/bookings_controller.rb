@@ -61,8 +61,7 @@ module Api
     def params_for_update
       booking_params
         .merge(user_id: @current_user.id,
-               seat_price: calculate_price(booking.flight.base_price,
-                                           booking.flight.flys_at))
+               seat_price: booking.flight&.calculate_price)
     end
 
     def booking
@@ -74,32 +73,16 @@ module Api
     end
 
     def create_booking
-      return unless flight
       Booking.new(flight_id: booking_params[:flight_id],
                   user_id: current_user.id,
                   no_of_seats: booking_params[:no_of_seats],
-                  seat_price: calculate_price(flight&.base_price,
-                                              flight&.flys_at))
+                  seat_price: flight&.calculate_price)
     end
 
     def authorize
       return if booking.user == current_user
       render json: { errors: { resource: ['is forbidden'] } },
              status: :forbidden
-    end
-
-    def calculate_price(base_price, flys_at)
-      if flys_at <= Time.zone.now
-        base_price +
-          (((15 - days_to_flight(flys_at)) / 15.0) * base_price)
-          .to_i
-      else
-        base_price * 2
-      end
-    end
-
-    def days_to_flight(flight_date)
-      ((flight_date - Time.zone.now) / (60 * 60 * 24)).to_i
     end
   end
 end
