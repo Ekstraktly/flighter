@@ -1,12 +1,21 @@
 module Api
   class CompaniesController < ApplicationController
+    before_action :authentificate, only: [:index,
+                                          :show,
+                                          :update,
+                                          :destroy,
+                                          :create]
+
     def index
       render json: Company.all
     end
 
     def show
-      company
-      render json: @company
+      if company
+        render json: company
+      else
+        render json: { errors: company.errors }, status: :bad_request
+      end
     end
 
     def create
@@ -19,18 +28,19 @@ module Api
     end
 
     def update
-      company
-      if @company.update(company_params)
-        render json: @company, status: :ok
+      if company.update(company_params)
+        render json: company, status: :ok
       else
-        render json: { errors: @company.errors }, status: :bad_request
+        render json: { errors: company.errors }, status: :bad_request
       end
     end
 
     def destroy
-      company
-      @company.destroy
-      head :no_content
+      if company
+        company.destroy
+      else
+        render json: { errors: current_user.errors }, status: :bad_request
+      end
     end
 
     private
@@ -40,7 +50,7 @@ module Api
     end
 
     def company
-      @company ||= Company.find(params[:id])
+      @company ||= Company.find_by id: params[:id]
     end
   end
 end

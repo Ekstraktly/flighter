@@ -1,16 +1,27 @@
 module Api
   class BookingsController < ApplicationController
+    before_action :authentificate, only: [:index,
+                                          :show,
+                                          :update,
+                                          :destroy,
+                                          :create]
+    before_action :authorize, only: [:update, :destroy, :show]
+
     def index
-      render json: Booking.all
+      render json: current_user.bookings
     end
 
     def show
-      booking
-      render json: @booking
+      if booking
+        render json: booking
+      else
+        render json: { 'errors': { 'resource': ['is forbidden'] } },
+               status: :forbidden
+      end
     end
 
     def create
-      booking = Booking.new(booking_params)
+      booking = create_booking
       if booking.save
         render json: booking, status: :created
       else
@@ -19,18 +30,15 @@ module Api
     end
 
     def update
-      booking
-      if @booking.update(booking_params)
-        render json: @booking, status: :ok
+      if booking.update(booking_params.merge(user_id: @current_user.id))
+        render json: booking
       else
-        render json: { errors: @booking.errors }, status: :bad_request
+        render json: { errors: booking.errors }, status: :bad_request
       end
     end
 
     def destroy
-      booking
-      @booking.destroy
-      head :no_content
+      booking&.destroy
     end
 
     private
@@ -43,7 +51,20 @@ module Api
     end
 
     def booking
-      @booking ||= Booking.find(params[:id])
+      @booking ||= Booking.find_by id: params[:id]
+    end
+
+    def create_booking
+      Booking.new(flight_id: booking_params[:flight_id],
+                  user_id: current_user.id,
+                  no_of_seats: booking_params[:no_of_seats],
+                  seat_price: booking_params[:seat_price])
+    end
+
+    def authorize
+      return if booking.user == current_user
+      render json: { errors: { resource: ['is forbidden'] } },
+             status: :forbidden
     end
   end
 end

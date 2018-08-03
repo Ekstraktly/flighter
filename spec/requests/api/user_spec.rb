@@ -1,23 +1,44 @@
 RSpec.describe 'Users API', type: :request do
   include TestHelpers::JsonResponse
   describe 'GET /users' do
-    before do
-      FactoryBot.create_list(:user, 3)
-      get '/api/users'
+    context 'when authenticated user and params are valid' do
+      let(:user) { FactoryBot.create(:user) }
+
+      before do
+        get '/api/users', headers: { Authorization: user.token }
+      end
+
+      it 'successfully returns a list of users' do
+        expect(json_body[:users].length).to eq(1)
+      end
+      it 'returns status OK' do
+        expect(response).to have_http_status(:ok)
+      end
     end
 
-    it 'successfully returns a list of users' do
-      expect(json_body[:users].length).to eq(3)
-    end
-    it 'returns status OK' do
-      expect(response).to have_http_status(:ok)
+    context 'when unauthenticated user and params are valid' do
+      let(:user) { FactoryBot.create(:user) }
+
+      before do
+        get '/api/users', headers: { Authorization: 'wrong_token' }
+      end
+
+      it 'returns status 401 Unauthorized' do
+        expect(response).to have_http_status(:unauthorized)
+      end
+      it 'returns token is invalid error' do
+        expect(json_body[:errors][:token]).to eq(['is invalid'])
+      end
     end
   end
 
   describe 'GET /users/:id' do
     let(:user) { FactoryBot.create(:user) }
 
-    before { get "/api/users/#{user.id}" }
+    before do
+      get "/api/users/#{user.id}",
+          headers: { Authorization: user.token }
+    end
 
     it 'returns a single user' do
       expect(json_body[:user]).to include(:email)
@@ -25,12 +46,39 @@ RSpec.describe 'Users API', type: :request do
     it 'returns status OK' do
       expect(response).to have_http_status(:ok)
     end
+
+    context 'when user is unauthenticated' do
+      before do
+        get '/api/users/wrong_user',
+            headers: { Authorization: user.token }
+      end
+
+      it 'returns stauts Forbidden' do
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    context 'when user is authenticated but unauthorized' do
+      let(:user2) { FactoryBot.create(:user) }
+
+      before do
+        get "/api/users/#{user2.id}",
+            headers: { Authorization: user.token }
+      end
+
+      it 'returns status 403 Forbidden' do
+        expect(response).to have_http_status(:forbidden)
+      end
+      it 'returns token is invalid error' do
+        expect(json_body[:errors][:resource]).to eq(['is forbidden'])
+      end
+    end
   end
 
   describe 'POST /api/users/' do
-    let(:user_params) { FactoryBot.attributes_for(:user) }
-
     context 'when params are valid' do
+      let(:user_params) { FactoryBot.attributes_for(:user) }
+
       it 'creates a user' do
         expect do
           post '/api/users', params: { user: user_params }
@@ -60,14 +108,16 @@ RSpec.describe 'Users API', type: :request do
   end
 
   describe 'UPDATE /api/users/:id' do
-    let(:users) { FactoryBot.create_list(:user, 3) }
+    let(:user) { FactoryBot.create(:user) }
 
-    before do
-      put "/api/users/#{users.first.id}",
-          params: { user: { email: 'ivan.novak@mail.hr' } }
-    end
+    context 'when authenticated user' do
+      before do
+        put "/api/users/#{user.id}",
+            params: { user: { email: 'ivan.novak@mail.hr',
+                              password: 'password' } },
+            headers: { Authorization: user.token }
+      end
 
-    context 'when params are valid' do
       it 'updates a user' do
         expect(json_body[:user]).to include(email: 'ivan.novak@mail.hr')
       end
@@ -78,6 +128,44 @@ RSpec.describe 'Users API', type: :request do
         expect(response).to have_http_status(:ok)
       end
     end
+
+    context 'when unauthenticated user' do
+      before do
+        put "/api/users/#{user.id}",
+            params: { user: { email: 'ivan.novak@mail.hr',
+                              password: 'password' } },
+            headers: { Authorization: 'wrong_token' }
+      end
+
+      it 'returns status 401 Unauthorized' do
+        expect(response).to have_http_status(:unauthorized)
+      end
+      it 'returns token is invalid error' do
+        expect(json_body[:errors][:token]).to eq(['is invalid'])
+      end
+    end
+
+    context 'when user is authenticated but unauthorized' do
+      let(:user2) { FactoryBot.create(:user) }
+
+      before { user2 }
+
+      it 'returns status Forbidden' do
+        put "/api/users/#{user2.id}",
+            params: { user: { email: 'ivan.novak@mail.hr',
+                              password: 'password' } },
+            headers: { Authorization: user.token }
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'returns errors' do
+        put "/api/users/#{user2.id}",
+            params: { user: { email: 'ivan.novak@mail.hr',
+                              password: 'password' } },
+            headers: { Authorization: user.token }
+        expect(json_body[:errors]).to include(:resource)
+      end
+    end
   end
 
   describe 'DELETE /api/users/:id' do
@@ -85,15 +173,37 @@ RSpec.describe 'Users API', type: :request do
 
     before { user }
 
-    context 'when params are valid' do
-      it 'deletes a user' do
-        expect do
-          delete "/api/users/#{user.id}"
-        end.to change(User, :count).by(-1)
+    it 'deletes a user' do
+      expect do
+        delete "/api/users/#{user.id}",
+               headers: { Authorization: user.token }
+      end.to change(User, :count).by(-1)
+    end
+    it 'returns 204 No content' do
+      delete "/api/users/#{user.id}",
+             headers: { Authorization: user.token }
+      expect(response).to have_http_status(:no_content)
+    end
+
+    context 'when user is unauthenticated' do
+      let(:user) { FactoryBot.create(:user) }
+
+      before { user }
+
+      it "doesn't delete user" do
+        delete "/api/users/#{user.id}",
+               headers: { Authorization: 'wrong_token' }
+        expect(response).to have_http_status(:unauthorized)
       end
-      it 'returns 204 No content' do
-        delete "/api/users/#{user.id}"
-        expect(response).to have_http_status(:no_content)
+    end
+
+    context 'when user is authenticated but unauthorized' do
+      let(:user2) { FactoryBot.create(:user) }
+
+      it 'returns status Forbidden' do
+        delete "/api/users/#{user2.id}",
+               headers: { Authorization: user.token }
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end

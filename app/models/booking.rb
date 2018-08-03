@@ -8,7 +8,7 @@ class Booking < ApplicationRecord
   validate :past_flight
 
   def past_flight
-    return if flight && flight.flys_at > Date.current
+    return if flight && flight.flys_at > Time.current
     errors.add(:flys_at, 'must be booked in the future')
   end
 end
