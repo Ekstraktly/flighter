@@ -112,6 +112,7 @@ RSpec.describe 'Bookings API', type: :request do
       it 'checks existance of seat_price' do
         post '/api/bookings', params: { booking: booking_params },
                               headers: { Authorization: user.token }
+
         expect(json_body[:booking]).to include(:seat_price)
       end
     end
@@ -123,6 +124,20 @@ RSpec.describe 'Bookings API', type: :request do
                params: { booking: booking_params.merge(flight_id: 888) },
                headers: { Authorization: user.token }
         end.to change(user.bookings, :count).by(0)
+      end
+
+      it 'returns errors' do
+        post '/api/bookings', params: { booking: { flight_id: '' } },
+                              headers: { Authorization: user.token }
+
+        expect(json_body[:errors]).to include(:flight)
+      end
+
+      it 'returns status 404 Bad request' do
+        post '/api/bookings', params: { booking: { flight_id: '' } },
+                              headers: { Authorization: user.token }
+
+        expect(response).to have_http_status(:bad_request)
       end
     end
   end
@@ -190,9 +205,11 @@ RSpec.describe 'Bookings API', type: :request do
                  headers: { Authorization: user.token }
         end.to change(Booking, :count).by(-1)
       end
+
       it 'returns status No content' do
         delete "/api/bookings/#{booking.id}",
                headers: { Authorization: user.token }
+
         expect(response).to have_http_status(:no_content)
       end
     end
