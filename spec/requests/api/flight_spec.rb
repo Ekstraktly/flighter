@@ -99,6 +99,7 @@ RSpec.describe 'Flights API', type: :request do
       it 'checks for company_id' do
         post '/api/flights', params: { flight: flight_params },
                              headers: { Authorization: user.token }
+
         expect(json_body[:flight]).to include(company_id: company.id)
       end
     end
@@ -118,6 +119,7 @@ RSpec.describe 'Flights API', type: :request do
       it 'checks for errors key' do
         post '/api/flights', params: { flight: { name: '' } },
                              headers: { Authorization: user.token }
+
         expect(json_body[:errors]).to include(:name)
       end
     end
@@ -177,9 +179,11 @@ RSpec.describe 'Flights API', type: :request do
                  headers: { Authorization: user.token }
         end.to change(Flight, :count).by(-1)
       end
+  
       it 'shows 204 Bad request' do
         delete "/api/flights/#{flight.id}",
                headers: { Authorization: user.token }
+
         expect(response).to have_http_status(:no_content)
       end
     end
