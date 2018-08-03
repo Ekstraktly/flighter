@@ -19,6 +19,4 @@ class FlightSerializer < ActiveModel::Serializer
   def company_name
     object.company.name
   end
-
-  delegate :current_price, to: object
 end
