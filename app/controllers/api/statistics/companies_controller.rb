@@ -4,7 +4,7 @@ module Api
       before_action :authentificate, only: [:index]
 
       def index
-        render json: Company.all.includes(:flights),
+        render json: Company.includes(:flights),
                each_serializer: Statistics::CompanySerializer
       end
     end

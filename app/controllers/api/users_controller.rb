@@ -4,13 +4,12 @@ module Api
     before_action :authorize, only: [:update, :destroy, :show]
 
     def index
-      render json:
-        if params[:query]
-          find_user(params).order(:email)
-                           .includes(:bookings)
-        else
-          User.all.order(:email).includes(:bookings)
-        end
+      users = User.order(:email).includes(:bookings)
+      if params[:query]
+        users = users.match_by_query(params[:query])
+                     .includes(:bookings)
+      end
+      render json: users
     end
 
     def show
@@ -60,14 +59,6 @@ module Api
       return if user == current_user
       render json: { errors: { resource: ['is forbidden'] } },
              status: :forbidden
-    end
-
-    def find_user(params)
-      User.all.where('lower(first_name) LIKE ? OR lower(last_name) LIKE ? OR
-                      lower(email) LIKE ?',
-                     '%' + params[:query].downcase + '%',
-                     '%' + params[:query].downcase + '%',
-                     '%' + params[:query].downcase + '%')
     end
   end
 end

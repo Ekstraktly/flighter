@@ -7,14 +7,9 @@ module Api
                                           :create]
 
     def index
-      render json: if params[:filter] == 'active'
-                     Company.joins(:flights).group(:id)
-                            .where('flys_at > ?', Time.zone.now)
-                       .all
-                            .order(:name)
-                   else
-                     Company.all.order(:name)
-                   end
+      companies = Company.order(:name)
+      companies = companies.active if params[:filter] == 'active'
+      render json: companies
     end
 
     def show

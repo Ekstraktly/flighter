@@ -6,14 +6,11 @@ Rails.application.routes.draw do
     resources :companies, except: [:new, :edit]
     resources :flights, except: [:new, :edit]
     resources :bookings, except: [:new, :edit]
-    post '/session', to: 'sessions#create'
-    delete '/session', to: 'sessions#destroy'
-    # resource :session, only: [:create, :destroy]
+    resources :session, only: [:create, :destroy]
 
     namespace :statistics do
-      get '/flights', to: 'flights#index'
-      get '/companies', to: 'companies#index'
+      resources :flights, only: :index
+      resources :company, only: :index
     end
   end
-  get '/world-cup', to: 'application#world_cup'
 end

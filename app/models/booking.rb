@@ -15,7 +15,6 @@ class Booking < ApplicationRecord
       .order('flights.flys_at',
              'flights.name',
              :created_at)
-      .includes(:flight, :user)
   }
 
   def past_flight
@@ -30,8 +29,6 @@ class Booking < ApplicationRecord
   end
 
   def total_booked_seats_on_flight
-    no_of_seats.to_i + Booking.where.not(user_id: user.id)
-                       .where(flight_id: flight.id)
-                              .sum(:no_of_seats)
+    no_of_seats + flight.bookings.where.not(id: id).sum(:no_of_seats)
   end
 end

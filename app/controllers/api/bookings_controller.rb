@@ -8,16 +8,13 @@ module Api
     before_action :authorize, only: [:update, :destroy, :show]
 
     def index
-      render json:
-        if params[:filter] == 'active'
-          current_user.bookings.active
-        else
-          current_user.bookings.joins(:flight)
-            .order('flights.flys_at',
-                   'flights.name',
-                   :created_at)
-                      .includes(:flight, :user)
-        end
+      bookings = current_user.bookings.joins(:flight)
+                             .order('flights.flys_at',
+                                    'flights.name',
+                                    :created_at)
+                             .includes(:flight, :user)
+      bookings = bookings.active if params[:filter] == 'active'
+      render json: bookings
     end
 
     def show
@@ -31,7 +28,7 @@ module Api
 
     def create
       booking = create_booking
-      if booking&.save
+      if booking.save
         render json: booking, status: :created
       else
         render json: { errors: booking.errors }, status: :bad_request
@@ -61,7 +58,7 @@ module Api
     def params_for_update
       booking_params
         .merge(user_id: @current_user.id,
-               seat_price: booking.flight&.calculate_price)
+               seat_price: booking.flight&.current_price)
     end
 
     def booking
@@ -76,7 +73,7 @@ module Api
       Booking.new(flight_id: booking_params[:flight_id],
                   user_id: current_user.id,
                   no_of_seats: booking_params[:no_of_seats],
-                  seat_price: flight&.calculate_price)
+                  seat_price: flight&.current_price)
     end
 
     def authorize

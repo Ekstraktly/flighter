@@ -4,6 +4,6 @@ class CompanySerializer < ActiveModel::Serializer
   attribute :no_of_active_flights
 
   def no_of_active_flights
-    object.flights.where('flys_at > ?', Time.zone.now).all.size
+    object.flights.where('flys_at > ?', Time.zone.now).count
   end
 end
