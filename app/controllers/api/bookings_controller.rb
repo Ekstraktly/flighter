@@ -31,10 +31,10 @@ module Api
 
     def create
       booking = create_booking
-      if booking && booking.save
+      if booking&.save
         render json: booking, status: :created
       else
-        render json: { errors: current_user.errors }, status: :bad_request
+        render json: { errors: booking.errors }, status: :bad_request
       end
     end
 
@@ -66,11 +66,11 @@ module Api
     end
 
     def booking
-      @booking ||= Booking.find_by id: params[:id]
+      @booking ||= Booking.find(params[:id])
     end
 
     def flight
-      @flight ||= Flight.find_by id: booking_params[:flight_id]
+      @flight ||= Flight.find_by(id: booking_params[:flight_id])
     end
 
     def create_booking
