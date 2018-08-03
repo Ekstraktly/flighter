@@ -128,14 +128,14 @@ RSpec.describe 'Bookings API', type: :request do
       it 'returns errors' do
         post '/api/bookings', params: { booking: { flight_id: '' } },
                               headers: { Authorization: user.token }
-        
+
         expect(json_body[:errors]).to include(:flight)
       end
-      
+
       it 'returns status 404 Bad request' do
         post '/api/bookings', params: { booking: { flight_id: '' } },
                               headers: { Authorization: user.token }
-        
+
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -208,7 +208,7 @@ RSpec.describe 'Bookings API', type: :request do
       it 'returns status No content' do
         delete "/api/bookings/#{booking.id}",
                headers: { Authorization: user.token }
-        
+
         expect(response).to have_http_status(:no_content)
       end
     end

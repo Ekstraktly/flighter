@@ -179,7 +179,7 @@ RSpec.describe 'Flights API', type: :request do
                  headers: { Authorization: user.token }
         end.to change(Flight, :count).by(-1)
       end
-  
+
       it 'shows 204 Bad request' do
         delete "/api/flights/#{flight.id}",
                headers: { Authorization: user.token }
