@@ -39,6 +39,7 @@ class Flight < ApplicationRecord
                            flys_at,
                            lands_at).empty?
     errors.add(:flys_at, "flights can't overlap")
+    errors.add(:lands_at, "flights can't overlap")
   end
 
   def days_to_flight(flight_date)
