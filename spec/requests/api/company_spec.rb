@@ -117,7 +117,7 @@ RSpec.describe 'Companys API', type: :request do
       it 'checks for errors key' do
         post '/api/companies', params: { company: { name: '' } },
                                headers: { Authorization: user.token }
-        
+
         expect(json_body[:errors]).to include(:name)
       end
     end
