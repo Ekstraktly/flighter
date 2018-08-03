@@ -119,8 +119,9 @@ RSpec.describe 'Bookings API', type: :request do
     context 'when authenticated user and invalid params' do
       it 'fails' do
         expect do
-          post '/api/bookings', params: { booking: booking_params.merge(flight_id: 888) },
-                                headers: { Authorization: user.token }
+          post '/api/bookings',
+               params: { booking: booking_params.merge(flight_id: 888) },
+               headers: { Authorization: user.token }
         end.to change(user.bookings, :count).by(0)
       end
     end

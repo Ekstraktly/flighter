@@ -18,10 +18,10 @@ RSpec.describe 'Flights Statistics API', type: :request do
       it 'returns revenue' do
         expect(json_body[:flights].first).to include(:revenue)
       end
-      it 'returns revenue' do
+      it 'returns no_of_booked_seats' do
         expect(json_body[:flights].first).to include(:no_of_booked_seats)
       end
-      it 'returns revenue' do
+      it 'returns occupancy' do
         expect(json_body[:flights].first).to include(:occupancy)
       end
     end

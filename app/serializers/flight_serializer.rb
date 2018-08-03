@@ -25,6 +25,7 @@ class FlightSerializer < ActiveModel::Serializer
       object.base_price
     else
       calculate_price(object.base_price, object.flys_at).to_i
+      # object.calculate_price
     end
   end
 
