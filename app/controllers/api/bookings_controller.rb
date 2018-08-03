@@ -62,6 +62,10 @@ module Api
       @booking ||= Booking.find_by id: params[:id]
     end
 
+    def flight
+      @flight ||= Flight.find_by id: booking_params[:flight_id]
+    end
+
     def create_booking
       return unless flight
       Booking.new(flight_id: booking_params[:flight_id],
@@ -89,10 +93,6 @@ module Api
 
     def days_to_flight(flight_date)
       ((flight_date - Time.zone.now) / (60 * 60 * 24)).to_i
-    end
-
-    def flight
-      @flight ||= Flight.find_by id: booking_params[:flight_id]
     end
   end
 end

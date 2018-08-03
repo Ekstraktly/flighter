@@ -5,8 +5,9 @@ module Api
 
     def index
       render json:
-        if params[:first_name] || params[:last_name] || params[:email]
-          find_user(params)
+        if params[:query]
+          find_user(params).order(:email)
+                           .includes(:bookings)
         else
           User.all.order(:email).includes(:bookings)
         end
@@ -62,13 +63,11 @@ module Api
     end
 
     def find_user(params)
-      User.all.where('lower(first_name) = ? OR lower(last_name) = ? OR
-                      lower(email) = ?',
-                     params[:first_name].to_s.downcase,
-                     params[:last_name].to_s.downcase,
-                     params[:email].to_s.downcase)
-          .order(:email)
-          .includes(:bookings)
+      User.all.where('lower(first_name) LIKE ? OR lower(last_name) LIKE ? OR
+                      lower(email) LIKE ?',
+                     '%' + params[:query].downcase + '%',
+                     '%' + params[:query].downcase + '%',
+                     '%' + params[:query].downcase + '%')
     end
   end
 end

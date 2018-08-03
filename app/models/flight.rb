@@ -38,6 +38,10 @@ class Flight < ApplicationRecord
                            company_id,
                            flys_at,
                            lands_at).empty?
-    errors.add(:lands_at, "flights can't overlap")
+    errors.add(:flys_at, "flights can't overlap")
+  end
+
+  def days_to_flight(flight_date)
+    ((flight_date - Time.zone.now) / (60 * 60 * 24)).to_i
   end
 end
