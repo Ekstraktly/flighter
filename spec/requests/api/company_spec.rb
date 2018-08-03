@@ -83,6 +83,7 @@ RSpec.describe 'Companys API', type: :request do
       it 'checks company name' do
         post '/api/companies', params: { company: company_params },
                                headers: { Authorization: user.token }
+
         expect(json_body[:company]).to include(name: company_params[:name])
       end
     end
@@ -116,6 +117,7 @@ RSpec.describe 'Companys API', type: :request do
       it 'checks for errors key' do
         post '/api/companies', params: { company: { name: '' } },
                                headers: { Authorization: user.token }
+
         expect(json_body[:errors]).to include(:name)
       end
     end
