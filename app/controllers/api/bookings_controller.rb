@@ -31,18 +31,15 @@ module Api
 
     def create
       booking = create_booking
-      if booking.save
+      if booking && booking.save
         render json: booking, status: :created
       else
-        render json: { errors: booking.errors }, status: :bad_request
+        render json: { errors: current_user.errors }, status: :bad_request
       end
     end
 
     def update
-      if booking.update(booking_params
-        .merge(user_id: @current_user.id,
-               seat_price: calculate_price(booking.flight.base_price,
-                                           booking.flight.flys_at)))
+      if booking.update(params_for_update)
         render json: booking
       else
         render json: { errors: booking.errors }, status: :bad_request
@@ -59,6 +56,13 @@ module Api
       params.require(:booking).permit(:flight_id,
                                       :user_id,
                                       :no_of_seats)
+    end
+
+    def params_for_update
+      booking_params
+        .merge(user_id: @current_user.id,
+               seat_price: calculate_price(booking.flight.base_price,
+                                           booking.flight.flys_at))
     end
 
     def booking
