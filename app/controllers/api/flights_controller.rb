@@ -10,7 +10,7 @@ module Api
       flights = Flight.active.includes(:company)
       if params[:company_id]
         flights = Flight.company_flights(params[:company_id])
-                        .includes(:comapny)
+                        .includes(:company)
       end
       render json: flights
     end

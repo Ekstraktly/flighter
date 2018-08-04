@@ -46,9 +46,9 @@ class Flight < ApplicationRecord
   end
 
   def current_price
-    return base_price * 2 if flys_at > Time.zone.now
+    return base_price * 2 if flys_at <= Time.zone.now
 
-    base_price + ((15 - days_to_flight / 15.0) * base_price).to_i
+    base_price + (((15 - days_to_flight) / 15.0) * base_price).to_i
   end
 
   def days_to_flight
