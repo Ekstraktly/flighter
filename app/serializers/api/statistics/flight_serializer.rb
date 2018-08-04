@@ -7,13 +7,15 @@ module Api
       attribute :occupancy
 
       def revenue
-        object.bookings.map do |booking|
-          booking.no_of_seats * booking.seat_price
-        end.sum
+        Booking.joins(:flight)
+               .where('cast(flights.id as text) = ?', object.id.to_s)
+               .sum('seat_price * bookings.no_of_seats')
       end
 
       def no_of_booked_seats
-        object.bookings.sum(:no_of_seats)
+        Booking.joins(:flight)
+               .where('cast(flights.id as text) = ?', object.id.to_s)
+               .sum(:no_of_seats)
       end
 
       def occupancy

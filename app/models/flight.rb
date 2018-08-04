@@ -35,14 +35,11 @@ class Flight < ApplicationRecord
   def overlaps
     return if flys_at &&
               lands_at &&
-              Flight.where.not(id: id)
-                    .where("company_id = ? AND
-                           (flys_at, lands_at) OVERLAPS (?,?)",
-                           company_id,
-                           flys_at,
-                           lands_at).empty?
-    errors.add(:flys_at, "flights can't overlap")
-    errors.add(:lands_at, "flights can't overlap")
+              company.flights.where.not(id: id)
+                     .where('(flys_at, lands_at) OVERLAPS (?,?)',
+                            flys_at,
+                            lands_at).empty?
+    overlap_errors
   end
 
   def current_price
@@ -53,5 +50,10 @@ class Flight < ApplicationRecord
 
   def days_to_flight
     (flys_at.to_date - Date.current).to_i
+  end
+
+  def overlap_errors
+    errors.add(:flys_at, "flights can't overlap")
+    errors.add(:lands_at, "flights can't overlap")
   end
 end
