@@ -23,20 +23,10 @@ RSpec.describe 'Companys Statistics API', type: :request do
         expect(json_body[:companies].first)
           .to include(total_no_of_booked_seats: 3)
       end
-    end
 
-    context 'when unauthenticated user' do
-      let(:user) { FactoryBot.create(:user) }
-
-      before do
-        get '/api/companies', headers: { Authorization: 'wrong_token' }
-      end
-
-      it 'returns status 401 Unauthorized' do
-        expect(response).to have_http_status(:unauthorized)
-      end
-      it 'returns token is invalid error' do
-        expect(json_body[:errors][:token]).to eq(['is invalid'])
+      it 'returns average price of seats' do
+        expect(json_body[:companies].first)
+          .to include(average_price_of_seats: 100)
       end
     end
   end
