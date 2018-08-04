@@ -35,6 +35,7 @@ class Flight < ApplicationRecord
   def overlaps
     return if flys_at &&
               lands_at &&
+              company &&
               company.flights.where.not(id: id)
                      .where('(flys_at, lands_at) OVERLAPS (?,?)',
                             flys_at,
