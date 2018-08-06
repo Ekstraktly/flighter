@@ -63,7 +63,7 @@ module Api
     def params_for_update
       booking_params
         .merge(user_id: @current_user.id,
-               seat_price: booking.flight&.current_price)
+               seat_price: FlightCalculator.new(booking.flight).price)
     end
 
     def booking
@@ -78,7 +78,7 @@ module Api
       Booking.new(flight_id: booking_params[:flight_id],
                   user_id: current_user.id,
                   no_of_seats: booking_params[:no_of_seats],
-                  seat_price: flight&.current_price)
+                  seat_price: FlightCalculator.new(flight).price)
     end
   end
 end

@@ -7,15 +7,13 @@ module Api
       attribute :average_price_of_seats
 
       def total_revenue
-        Booking.joins(:flight)
-               .where('cast(flights.company_id as text) = ?', object.id.to_s)
-               .sum('seat_price * bookings.no_of_seats')
+        CompaniesQuery.new(relation: object.flights)
+                      .total_revenue
       end
 
       def total_no_of_booked_seats
-        Booking.joins(:flight)
-               .where('cast(flights.company_id as text) = ?', object.id.to_s)
-               .sum(:no_of_seats)
+        CompaniesQuery.new(relation: object.flights)
+                      .total_no_of_booked_seats
       end
 
       def average_price_of_seats
