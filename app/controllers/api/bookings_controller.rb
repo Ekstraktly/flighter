@@ -24,7 +24,7 @@ module Api
 
     def create
       authorize Booking
-      form = CreateBookingForm.new(booking_params)
+      form = BookingForm.new(booking_params)
       booking = form.save
       if booking
         render json: booking, status: :created
@@ -35,8 +35,8 @@ module Api
 
     def update
       authorize booking
-      form = UpdateBookingForm.new(params_for_update)
-      booking = form.save
+      form = BookingForm.new(params_for_update)
+      booking = form.update
       if booking
         render json: booking
       else
@@ -60,7 +60,8 @@ module Api
 
     def params_for_update
       booking_params
-        .merge(id: params[:id])
+        .merge(id: params[:id],
+               flight_id: booking.flight_id)
     end
 
     def booking
