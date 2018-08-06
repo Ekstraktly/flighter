@@ -5,7 +5,6 @@ module Api
                                           :update,
                                           :destroy,
                                           :create]
-    # before_action :authorize, only: [:update, :destroy, :show]
 
     def index
       authorize Booking
@@ -19,19 +18,15 @@ module Api
     end
 
     def show
-      # if booking
       authorize booking
       render json: booking
-      # else
-      #  render json: { 'errors': { 'resource': ['is forbidden'] } },
-      #         status: :forbidden
-      # end
     end
 
     def create
       authorize Booking
-      booking = create_booking
-      if booking.save
+      form = CreateBookingForm.new(booking_params)
+      booking = form.save
+      if booking
         render json: booking, status: :created
       else
         render json: { errors: booking.errors }, status: :bad_request
@@ -40,7 +35,9 @@ module Api
 
     def update
       authorize booking
-      if booking.update(params_for_update)
+      form = UpdateBookingForm.new(params_for_update)
+      booking = form.save
+      if booking
         render json: booking
       else
         render json: { errors: booking.errors }, status: :bad_request
@@ -58,27 +55,16 @@ module Api
       params.require(:booking).permit(:flight_id,
                                       :user_id,
                                       :no_of_seats)
+            .merge(user_id: current_user.id)
     end
 
     def params_for_update
       booking_params
-        .merge(user_id: @current_user.id,
-               seat_price: FlightCalculator.new(booking.flight).price)
+        .merge(id: params[:id])
     end
 
     def booking
       @booking ||= Booking.find(params[:id])
-    end
-
-    def flight
-      @flight ||= Flight.find_by(id: booking_params[:flight_id])
-    end
-
-    def create_booking
-      Booking.new(flight_id: booking_params[:flight_id],
-                  user_id: current_user.id,
-                  no_of_seats: booking_params[:no_of_seats],
-                  seat_price: FlightCalculator.new(flight).price)
     end
   end
 end

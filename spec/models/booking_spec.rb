@@ -12,7 +12,8 @@ RSpec.describe Booking do
       .is_greater_than(0)
   }
   it 'checks if booking is in past' do
-    booking = FactoryBot.build(:booking)
+    flight = FactoryBot.build(:flight, flys_at: Time.current - 1.day)
+    booking = FactoryBot.build(:booking, flight: flight)
     booking.valid?
     expect(booking.errors[:flight])
       .to include('must be booked in the future')
