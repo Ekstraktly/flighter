@@ -5,9 +5,10 @@ module Api
                                           :update,
                                           :destroy,
                                           :create]
-    before_action :authorize, only: [:update, :destroy, :show]
+    # before_action :authorize, only: [:update, :destroy, :show]
 
     def index
+      authorize Booking
       bookings = current_user.bookings.joins(:flight)
                              .order('flights.flys_at',
                                     'flights.name',
@@ -18,15 +19,17 @@ module Api
     end
 
     def show
-      if booking
-        render json: booking
-      else
-        render json: { 'errors': { 'resource': ['is forbidden'] } },
-               status: :forbidden
-      end
+      # if booking
+      authorize booking
+      render json: booking
+      # else
+      #  render json: { 'errors': { 'resource': ['is forbidden'] } },
+      #         status: :forbidden
+      # end
     end
 
     def create
+      authorize Booking
       booking = create_booking
       if booking.save
         render json: booking, status: :created
@@ -36,6 +39,7 @@ module Api
     end
 
     def update
+      authorize booking
       if booking.update(params_for_update)
         render json: booking
       else
@@ -44,6 +48,7 @@ module Api
     end
 
     def destroy
+      authorize booking
       booking&.destroy
     end
 
@@ -74,12 +79,6 @@ module Api
                   user_id: current_user.id,
                   no_of_seats: booking_params[:no_of_seats],
                   seat_price: flight&.current_price)
-    end
-
-    def authorize
-      return if booking.user == current_user
-      render json: { errors: { resource: ['is forbidden'] } },
-             status: :forbidden
     end
   end
 end

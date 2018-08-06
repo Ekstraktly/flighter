@@ -1,9 +1,10 @@
 module Api
   class UsersController < ApplicationController
     before_action :authentificate, only: [:index, :show, :update, :destroy]
-    before_action :authorize, only: [:update, :destroy, :show]
+    # before_action :authorize, only: [:update, :destroy, :show]
 
     def index
+      authorize User
       users = User.order(:email).includes(:bookings)
       if params[:query]
         users = users.match_by_query(params[:query])
@@ -14,6 +15,7 @@ module Api
 
     def show
       if user
+        authorize user
         render json: user
       else
         render json: { 'errors': { 'resource': ['is forbidden'] } },
@@ -22,6 +24,7 @@ module Api
     end
 
     def create
+      authorize User
       user = User.new(user_params)
       if user.save
         render json: user, status: :created
@@ -31,6 +34,7 @@ module Api
     end
 
     def update
+      authorize user
       if user.update(user_params)
         render json: user, status: :ok
       else
@@ -39,6 +43,7 @@ module Api
     end
 
     def destroy
+      authorize user
       user&.destroy
     end
 
@@ -53,12 +58,6 @@ module Api
 
     def user
       @user ||= User.find_by id: params[:id]
-    end
-
-    def authorize
-      return if user == current_user
-      render json: { errors: { resource: ['is forbidden'] } },
-             status: :forbidden
     end
   end
 end
