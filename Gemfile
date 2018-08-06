@@ -16,6 +16,11 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.7'
   gem 'shoulda-matchers'
 end
+
+group :test do
+  gem 'pundit-matchers', '~> 1.6.0'
+end
+
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'active_type'
 gem 'activeadmin'
