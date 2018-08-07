@@ -26,10 +26,12 @@ class ApplicationController < ActionController::Base
   end
 
   def parameter_missing(exception)
-    render json: { errors: exception.message }, status: :bad_request
+    render json: { 'errors': { "#{exception.record}": ['is missing'] } },
+           status: :bad_request
   end
 
-  def render_not_found_response(exception)
-    render json: { error: exception.message }, status: :not_found
+  def render_not_found_response
+    render json: { 'errors': { 'resource': ["doesn't exist"] } },
+           status: :not_found
   end
 end
