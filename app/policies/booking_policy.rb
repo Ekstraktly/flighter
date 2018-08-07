@@ -1,6 +1,6 @@
 class BookingPolicy < ApplicationPolicy
   def update?
-    record.user == user && record.flight.flys_at > Time.zone.now
+    record.user == user && record.flight.flys_at >= Time.zone.now
   end
 
   def destroy?

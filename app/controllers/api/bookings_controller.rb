@@ -25,8 +25,8 @@ module Api
     def create
       authorize Booking
       form = BookingForm.new(booking_params)
-      booking = form.save
-      if booking
+      if form.save
+        booking = Booking.find(form.id) # nepotrean upit u bazu
         render json: booking, status: :created
       else
         render json: { errors: booking.errors }, status: :bad_request
@@ -36,7 +36,7 @@ module Api
     def update
       authorize booking
       form = BookingForm.new(params_for_update)
-      updated_booking = form.update(booking)
+      updated_booking = form.update(params_for_update)
       if updated_booking
         render json: booking
       else
@@ -60,8 +60,7 @@ module Api
 
     def params_for_update
       booking_params
-        .merge(id: params[:id],
-               flight_id: booking.flight_id)
+        .merge(flight_id: booking.flight_id)
     end
 
     def booking
