@@ -6,6 +6,8 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActionController::ParameterMissing, with: :parameter_missing
 
+  rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
+
   private
 
   def authentificate
@@ -24,6 +26,10 @@ class ApplicationController < ActionController::Base
   end
 
   def parameter_missing(exception)
-    render json: { errors: exception.record.errors }, status: :bad_request
+    render json: { errors: exception.message }, status: :bad_request
+  end
+
+  def render_not_found_response(exception)
+    render json: { error: exception.message }, status: :not_found
   end
 end
