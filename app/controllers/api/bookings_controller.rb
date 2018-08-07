@@ -36,8 +36,8 @@ module Api
     def update
       authorize booking
       form = BookingForm.new(params_for_update)
-      booking = form.update
-      if booking
+      updated_booking = form.update(booking)
+      if updated_booking
         render json: booking
       else
         render json: { errors: booking.errors }, status: :bad_request
