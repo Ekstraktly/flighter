@@ -7,7 +7,8 @@ module Api
       attribute :average_price_of_seats
 
       def average_price_of_seats
-        return 0 if object.nil? || object.total_no_of_booked_seats.zero?
+        return 0 if object.total_revenue.nil? ||
+                    object.total_no_of_booked_seats.zero?
         (object.total_revenue.to_f / object.total_no_of_booked_seats.to_f).to_f
       end
     end
