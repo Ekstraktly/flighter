@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
+  rescue_from ActionController::ParameterMissing, with: :parameter_missing
+
   private
 
   def authentificate
@@ -19,5 +21,9 @@ class ApplicationController < ActionController::Base
   def user_not_authorized
     render json: { 'errors': { 'resource': ['is forbidden'] } },
            status: :forbidden
+  end
+
+  def parameter_missing(exception)
+    render json: { errors: exception.record.errors }, status: :bad_request
   end
 end
