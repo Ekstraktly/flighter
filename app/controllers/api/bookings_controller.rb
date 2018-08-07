@@ -35,9 +35,8 @@ module Api
 
     def update
       authorize booking
-      form = BookingForm.new(params_for_update)
-      if form.update(params_for_update)
-        booking = Booking.find(form.id)
+      if booking_form.update(params_for_update)
+        booking = ActiveType.cast(booking_form, Booking)
         render json: booking
       else
         render json: { errors: form.errors }, status: :bad_request
@@ -65,6 +64,10 @@ module Api
 
     def booking
       @booking ||= Booking.find(params[:id])
+    end
+
+    def booking_form
+      @booking_form ||= BookingForm.find(params[:id])
     end
   end
 end
