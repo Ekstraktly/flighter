@@ -128,15 +128,15 @@ RSpec.describe 'Bookings API', type: :request do
                      seat_price: 100)
     end
 
-    context 'when user is authenticated and flight is in past' do
+    context 'when user is authenticated' do
       before do
         put "/api/bookings/#{booking.id}",
             params: { booking: { no_of_seats: 3 } },
             headers: { Authorization: user.token }
       end
 
-      it 'does not update a booking' do
-        expect(json_body[:booking]).to include(no_of_seats: 2)
+      it 'updates a booking' do
+        expect(json_body[:booking]).to include(no_of_seats: 3)
       end
       it 'checks existance of flight_id attribute' do
         expect(json_body[:booking]).to include(:flight_id)

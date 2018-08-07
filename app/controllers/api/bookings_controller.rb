@@ -29,18 +29,18 @@ module Api
         booking = Booking.find(form.id) # nepotrean upit u bazu
         render json: booking, status: :created
       else
-        render json: { errors: booking.errors }, status: :bad_request
+        render json: { errors: form.errors }, status: :bad_request
       end
     end
 
     def update
       authorize booking
       form = BookingForm.new(params_for_update)
-      updated_booking = form.update(params_for_update)
-      if updated_booking
+      if form.update(params_for_update)
+        booking = Booking.find(form.id)
         render json: booking
       else
-        render json: { errors: booking.errors }, status: :bad_request
+        render json: { errors: form.errors }, status: :bad_request
       end
     end
 
