@@ -32,10 +32,6 @@ class BookingForm < ActiveType::Record[Booking]
     @flight ||= Flight.find_by(id: flight_id)
   end
 
-  def booking
-    @booking ||= Booking.find_by(id: id)
-  end
-
   def set_seat_price
     @current_seat_price = FlightCalculator.new(flight).price
   end
