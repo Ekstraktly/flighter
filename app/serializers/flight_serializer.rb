@@ -22,4 +22,8 @@ class FlightSerializer < ActiveModel::Serializer
   def seat_price
     FlightCalculator.new(object).price
   end
+
+  def current_price
+    FlightCalculator.new(object).price
+  end
 end
