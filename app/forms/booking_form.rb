@@ -18,7 +18,7 @@ class BookingForm < ActiveType::Record[Booking]
 
   def update
     # return false unless valid?
-    return booking if booking.no_of_seats == no_of_seats
+    return booking unless booking.no_of_seats_changed?
     set_seat_price
     if booking.update(no_of_seats: no_of_seats,
                       seat_price: @current_seat_price)
