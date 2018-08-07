@@ -8,8 +8,7 @@ class FlightSerializer < ActiveModel::Serializer
   attribute :flys_at
   attribute :lands_at
   attribute :no_of_booked_seats
-  attribute :current_price
-
+  attribute :seat_price
   belongs_to :company, serializer: CompanySerializer
 
   def no_of_booked_seats
@@ -20,7 +19,7 @@ class FlightSerializer < ActiveModel::Serializer
     object.company.name
   end
 
-  def current_price
+  def seat_price
     FlightCalculator.new(object).price
   end
 end

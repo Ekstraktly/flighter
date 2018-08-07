@@ -3,7 +3,7 @@ RSpec.describe 'Flights Query API', type: :request do
   describe 'GET /api/flights' do
     let(:user) { FactoryBot.create(:user) }
 
-    context 'when calculating current_price after flight has departed' do
+    context 'when calculating seat_price after flight has departed' do
       let(:flight) do
         FactoryBot.create(:flight,
                           flys_at: Time.zone.now,
@@ -15,7 +15,7 @@ RSpec.describe 'Flights Query API', type: :request do
       end
 
       it 'returns double price' do
-        expect(json_body[:flight]).to include(current_price: 20)
+        expect(json_body[:flight]).to include(seat_price: 20)
       end
     end
 
@@ -32,7 +32,7 @@ RSpec.describe 'Flights Query API', type: :request do
       end
 
       it 'returns base price' do
-        expect(json_body[:flight]).to include(current_price: 10)
+        expect(json_body[:flight]).to include(seat_price: 10)
       end
     end
   end
