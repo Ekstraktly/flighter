@@ -18,8 +18,7 @@ module Api
         authorize company
         render json: company
       else
-        render json: { 'errors': { "request": ['bad request'] } },
-               status: :bad_request
+        render json: { errors: company.errors }, status: :bad_request
       end
     end
 
@@ -29,8 +28,7 @@ module Api
       if company.save
         render json: company, status: :created
       else
-        render json: { 'errors': { "request": ['bad request'] } },
-               status: :bad_request
+        render json: { errors: company.errors }, status: :bad_request
       end
     end
 
@@ -39,8 +37,7 @@ module Api
       if company.update(company_params)
         render json: company, status: :ok
       else
-        render json: { 'errors': { "request": ['bad request'] } },
-               status: :bad_request
+        render json: { errors: company.errors }, status: :bad_request
       end
     end
 
@@ -49,8 +46,7 @@ module Api
         authorize company
         company.destroy
       else
-        render json: { 'errors': { "request": ['bad request'] } },
-               status: :bad_request
+        render json: { errors: current_user.errors }, status: :bad_request
       end
     end
 
@@ -61,7 +57,7 @@ module Api
     end
 
     def company
-      @company ||= Company.find_by id: params[:id]
+      @company ||= Company.find(params[:id])
     end
   end
 end

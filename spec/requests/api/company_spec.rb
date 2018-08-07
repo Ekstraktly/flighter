@@ -207,7 +207,7 @@ RSpec.describe 'Companys API', type: :request do
       it 'returns status Bad request' do
         delete '/api/companies/wrong_company',
                headers: { Authorization: user.token }
-        expect(response).to have_http_status(:bad_request)
+        expect(response).to have_http_status(:not_found)
       end
     end
 

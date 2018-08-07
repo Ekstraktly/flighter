@@ -54,7 +54,7 @@ RSpec.describe 'Users API', type: :request do
       end
 
       it 'returns stauts Forbidden' do
-        expect(response).to have_http_status(:forbidden)
+        expect(response).to have_http_status(:not_found)
       end
     end
 

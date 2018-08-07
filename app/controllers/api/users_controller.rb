@@ -57,7 +57,7 @@ module Api
     end
 
     def user
-      @user ||= User.find_by id: params[:id]
+      @user ||= User.find(params[:id])
     end
   end
 end

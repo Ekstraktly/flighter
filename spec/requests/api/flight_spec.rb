@@ -59,7 +59,7 @@ RSpec.describe 'Flights API', type: :request do
       end
 
       it 'returns stauts 400 Bad request shoud return)' do
-        expect(response).to have_http_status(:bad_request)
+        expect(response).to have_http_status(:not_found)
       end
     end
 

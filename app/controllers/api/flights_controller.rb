@@ -65,7 +65,7 @@ module Api
     end
 
     def flight
-      @flight ||= Flight.find_by id: params[:id]
+      @flight ||= Flight.find(params[:id])
     end
   end
 end
