@@ -23,8 +23,8 @@ module Api
     end
 
     def create
-      authorize Company
       company = Company.new(company_params)
+      authorize Company
       if company.save
         render json: company, status: :created
       else

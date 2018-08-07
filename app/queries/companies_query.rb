@@ -14,11 +14,4 @@ class CompaniesQuery
     relation.joins(:bookings)
             .sum('bookings.no_of_seats')
   end
-
-  def with_stats
-    relation.joins(:flight)
-            .where('cast(flights.company_id as text) = ?', object.id.to_s)
-            .select('SUM(no_of_seats) AS total_no_of_booked_seats')
-            .select('SUM(no_of_seats*bookings.no_of_seats) AS total_revenue')
-  end
 end
