@@ -14,7 +14,8 @@ class FlightsQuery
   end
 
   def with_stats
-    relation.select('SUM(seat_price * bookings.no_of_seats) AS revenue')
+    relation.select('SUM(bookings.seat_price * bookings.no_of_seats)
+                     AS revenue')
             .select('SUM(bookings.no_of_seats) AS no_of_booked_seats')
             .select('SUM(bookings.no_of_seats) / SUM(no_of_seats)
                      AS occupancy')
