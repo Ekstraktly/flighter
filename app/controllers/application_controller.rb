@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
   end
 
   def parameter_missing(exception)
-    render json: { errors: exception.param.errors },
+    render json: { 'errors': { "#{exception.param}": ['is missing'] } },
            status: :bad_request
   end
 
