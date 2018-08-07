@@ -39,7 +39,7 @@ module Api
         booking = ActiveType.cast(booking_form, Booking)
         render json: booking
       else
-        render json: { errors: form.errors }, status: :bad_request
+        render json: { errors: booking_form.errors }, status: :bad_request
       end
     end
 
