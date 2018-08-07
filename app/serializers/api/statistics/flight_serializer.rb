@@ -7,7 +7,7 @@ module Api
       attribute :occupancy
 
       def occupancy
-        return 0 if object.flight_occupancy.nil?
+        return '0.0%' if object.flight_occupancy.nil?
         "#{(object.flight_occupancy * 100.0).round(2)}%"
       end
     end
