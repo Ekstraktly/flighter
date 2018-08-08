@@ -8,7 +8,13 @@ module Api
     before_action :authorize, only: [:update, :destroy, :show]
 
     def index
-      render json: current_user.bookings
+      bookings = current_user.bookings.joins(:flight)
+                             .order('flights.flys_at',
+                                    'flights.name',
+                                    :created_at)
+                             .includes(:flight, :user)
+      bookings = bookings.active if params[:filter] == 'active'
+      render json: bookings
     end
 
     def show
@@ -30,7 +36,7 @@ module Api
     end
 
     def update
-      if booking.update(booking_params.merge(user_id: @current_user.id))
+      if booking.update(params_for_update)
         render json: booking
       else
         render json: { errors: booking.errors }, status: :bad_request
@@ -46,19 +52,28 @@ module Api
     def booking_params
       params.require(:booking).permit(:flight_id,
                                       :user_id,
-                                      :no_of_seats,
-                                      :seat_price)
+                                      :no_of_seats)
+    end
+
+    def params_for_update
+      booking_params
+        .merge(user_id: @current_user.id,
+               seat_price: booking.flight&.current_price)
     end
 
     def booking
-      @booking ||= Booking.find_by id: params[:id]
+      @booking ||= Booking.find(params[:id])
+    end
+
+    def flight
+      @flight ||= Flight.find_by(id: booking_params[:flight_id])
     end
 
     def create_booking
       Booking.new(flight_id: booking_params[:flight_id],
                   user_id: current_user.id,
                   no_of_seats: booking_params[:no_of_seats],
-                  seat_price: booking_params[:seat_price])
+                  seat_price: flight&.current_price)
     end
 
     def authorize

@@ -113,16 +113,17 @@ RSpec.describe 'Bookings API', type: :request do
         post '/api/bookings', params: { booking: booking_params },
                               headers: { Authorization: user.token }
 
-        expect(json_body[:booking]).to include(seat_price: 200)
+        expect(json_body[:booking]).to include(:seat_price)
       end
     end
 
-    context 'when params are invalid' do
-      it 'not change booking count' do
+    context 'when authenticated user and invalid params' do
+      it 'fails' do
         expect do
-          post '/api/bookings', params: { booking: { flight_id: 'asd' } },
-                                headers: { Authorization: user.token }
-        end.to change(Booking, :count).by(0)
+          post '/api/bookings',
+               params: { booking: booking_params.merge(flight_id: 888) },
+               headers: { Authorization: user.token }
+        end.to change(user.bookings, :count).by(0)
       end
 
       it 'returns errors' do

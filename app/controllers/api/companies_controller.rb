@@ -7,7 +7,9 @@ module Api
                                           :create]
 
     def index
-      render json: Company.all
+      companies = Company.order(:name)
+      companies = companies.active if params[:filter] == 'active'
+      render json: companies
     end
 
     def show

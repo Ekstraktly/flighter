@@ -7,7 +7,12 @@ module Api
                                           :create]
 
     def index
-      render json: Flight.all
+      flights = Flight.active.includes(:company)
+      if params[:company_id]
+        flights = Flight.company_flights(params[:company_id])
+                        .includes(:company)
+      end
+      render json: flights
     end
 
     def show

@@ -4,7 +4,12 @@ module Api
     before_action :authorize, only: [:update, :destroy, :show]
 
     def index
-      render json: User.all
+      users = User.order(:email).includes(:bookings)
+      if params[:query]
+        users = users.match_by_query(params[:query])
+                     .includes(:bookings)
+      end
+      render json: users
     end
 
     def show

@@ -1,14 +1,10 @@
-class BookingSerializer < ActiveModel::Serializer
+class LightBookingSerializer < ActiveModel::Serializer
   attribute :id
-  attribute :flight_id
   attribute :flight_name
   attribute :company_name
-  attribute :flys_at
-  attribute :lands_at
-  attribute :user_id
   attribute :no_of_seats
   attribute :seat_price
-  attribute :total_price
+  attribute :flys_at
 
   belongs_to :flight, serializer: FlightSerializer
 
