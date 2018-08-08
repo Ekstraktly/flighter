@@ -11,7 +11,6 @@ module Api
       def flights_with_stats
         FlightsQuery.new(relation: Flight.all)
                     .with_stats
-                    .includes(:bookings)
       end
     end
   end

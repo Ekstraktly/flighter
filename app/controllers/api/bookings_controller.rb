@@ -34,10 +34,11 @@ module Api
 
     def update
       authorize booking
-      if booking_form.update(params_for_update)
-        render json: booking_form, serializer: BookingSerializer
+      form = ActiveType.cast(booking, BookingForm)
+      if form.update(booking_params.merge(flight_id: booking.flight_id))
+        render json: form, serializer: BookingSerializer
       else
-        render json: { errors: booking_form.errors }, status: :bad_request
+        render json: { errors: form.errors }, status: :bad_request
       end
     end
 
@@ -55,17 +56,8 @@ module Api
             .merge(user_id: current_user.id)
     end
 
-    def params_for_update
-      booking_params
-        .merge(flight_id: booking.flight_id)
-    end
-
     def booking
       @booking ||= Booking.find(params[:id])
-    end
-
-    def booking_form
-      @booking_form ||= BookingForm.find(params[:id])
     end
   end
 end

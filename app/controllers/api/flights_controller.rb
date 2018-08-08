@@ -45,12 +45,8 @@ module Api
     end
 
     def destroy
-      if flight
-        authorize flight
-        flight.destroy
-      else
-        render json: { errors: current_user.errors }, status: :bad_request
-      end
+      authorize flight
+      flight.destroy
     end
 
     private

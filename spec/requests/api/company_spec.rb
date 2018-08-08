@@ -114,12 +114,6 @@ RSpec.describe 'Companys API', type: :request do
                                headers: { Authorization: user.token }
         expect(response).to have_http_status(:bad_request)
       end
-      # it 'checks for errors key' do
-      #  post '/api/companies', params: { company: { name: '' } },
-      #                         headers: { Authorization: user.token }
-
-      #  expect(json_body[:errors]).to include(:name)
-      # end
     end
   end
 

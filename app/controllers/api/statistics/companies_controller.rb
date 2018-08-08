@@ -11,7 +11,6 @@ module Api
       def companies_with_stats
         CompaniesQuery.new(relation: Company.all)
                       .with_stats
-                      .includes(:flights)
       end
     end
   end

@@ -1,7 +1,6 @@
 module Api
   class UsersController < ApplicationController
     before_action :authentificate, only: [:index, :show, :update, :destroy]
-    # before_action :authorize, only: [:update, :destroy, :show]
 
     def index
       authorize User
@@ -14,13 +13,8 @@ module Api
     end
 
     def show
-      if user
-        authorize user
-        render json: user
-      else
-        render json: { 'errors': { 'resource': ['is forbidden'] } },
-               status: :forbidden
-      end
+      authorize user
+      render json: user
     end
 
     def create
@@ -44,7 +38,7 @@ module Api
 
     def destroy
       authorize user
-      user&.destroy
+      user.destroy
     end
 
     private
