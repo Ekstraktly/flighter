@@ -8,8 +8,8 @@ class FlightCalculator
   end
 
   def price
-    return @base_price * 2 if flys_at <= Time.zone.now
-    return @base_price if flys_at > 15.days.from_now
+    return base_price * 2 if flys_at <= Time.zone.now
+    return base_price if flys_at > 15.days.from_now
     calculate_price
   end
 
