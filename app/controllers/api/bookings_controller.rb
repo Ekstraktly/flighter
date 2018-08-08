@@ -26,8 +26,7 @@ module Api
       authorize Booking
       form = BookingForm.new(booking_params)
       if form.save
-        booking = Booking.find(form.id) # nepotrean upit u bazu
-        render json: booking, status: :created
+        render json: form, serializer: BookingSerializer, status: :created
       else
         render json: { errors: form.errors }, status: :bad_request
       end
@@ -36,8 +35,7 @@ module Api
     def update
       authorize booking
       if booking_form.update(params_for_update)
-        booking = ActiveType.cast(booking_form, Booking)
-        render json: booking
+        render json: booking_form, serializer: BookingSerializer
       else
         render json: { errors: booking_form.errors }, status: :bad_request
       end
