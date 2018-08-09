@@ -5,7 +5,7 @@ describe UserPolicy do
 
   let(:user_resource) { FactoryBot.create(:user) }
 
-  context 'accessing own user' do
+  context 'when accessing own user' do
     let(:user) { user_resource }
 
     it { is_expected.to permit_action(:create) }
@@ -15,8 +15,8 @@ describe UserPolicy do
     it { is_expected.to permit_action(:destroy) }
   end
 
-  context 'accessing other user' do
-    let (:user) { FactoryBot.create(:user) }
+  context 'when accessing other user' do
+    let(:user) { FactoryBot.create(:user) }
 
     it { is_expected.to permit_action(:create) }
     it { is_expected.to permit_action(:index) }

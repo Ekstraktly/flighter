@@ -5,7 +5,7 @@ describe BookingPolicy do
 
   let(:booking) { FactoryBot.create(:booking, user: user) }
 
-  context 'accessing own booking' do
+  context 'when accessing own booking' do
     let(:user) { FactoryBot.create(:user) }
 
     it { is_expected.to permit_action(:create) }
@@ -15,11 +15,10 @@ describe BookingPolicy do
     it { is_expected.to permit_action(:destroy) }
   end
 
-  context 'accessing other users booking' do
+  context 'when accessing other users booking' do
     let(:user) { FactoryBot.create(:user) }
     let(:other_user) { FactoryBot.create(:user) }
     let(:booking) { FactoryBot.create(:booking, user: other_user) }
-
 
     it { is_expected.to permit_action(:create) }
     it { is_expected.to permit_action(:index) }
