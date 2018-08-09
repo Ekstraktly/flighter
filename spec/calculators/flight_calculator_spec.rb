@@ -31,7 +31,7 @@ RSpec.describe 'Flight Calculator', type: :request do
     context 'when flight has departured' do
       let(:flight) do
         FactoryBot.create(:flight,
-                          flys_at: Time.zone.now - 1.days,
+                          flys_at: Time.zone.now - 1.day,
                           lands_at: Time.zone.now,
                           base_price: 100)
       end
