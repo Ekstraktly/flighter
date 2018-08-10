@@ -7,6 +7,7 @@ module Api
                                           :create]
 
     def index
+      authorize Flight
       flights = Flight.active.includes(:company)
       if params[:company_id]
         flights = Flight.company_flights(params[:company_id])
@@ -16,14 +17,12 @@ module Api
     end
 
     def show
-      if flight
-        render json: flight
-      else
-        render json: { errors: current_user.errors }, status: :bad_request
-      end
+      authorize flight
+      render json: flight
     end
 
     def create
+      authorize Flight
       flight = Flight.new(flight_params)
       if flight.save
         render json: flight, status: :created
@@ -33,6 +32,7 @@ module Api
     end
 
     def update
+      authorize flight
       if flight.update(flight_params)
         render json: flight, status: :ok
       else
@@ -41,11 +41,8 @@ module Api
     end
 
     def destroy
-      if flight
-        flight.destroy
-      else
-        render json: { errors: current_user.errors }, status: :bad_request
-      end
+      authorize flight
+      flight.destroy
     end
 
     private
@@ -60,7 +57,7 @@ module Api
     end
 
     def flight
-      @flight ||= Flight.find_by id: params[:id]
+      @flight ||= Flight.find(params[:id])
     end
   end
 end

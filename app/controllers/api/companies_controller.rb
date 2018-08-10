@@ -7,21 +7,20 @@ module Api
                                           :create]
 
     def index
+      authorize Company
       companies = Company.order(:name)
       companies = companies.active if params[:filter] == 'active'
       render json: companies
     end
 
     def show
-      if company
-        render json: company
-      else
-        render json: { errors: company.errors }, status: :bad_request
-      end
+      authorize company
+      render json: company
     end
 
     def create
       company = Company.new(company_params)
+      authorize Company
       if company.save
         render json: company, status: :created
       else
@@ -30,6 +29,7 @@ module Api
     end
 
     def update
+      authorize company
       if company.update(company_params)
         render json: company, status: :ok
       else
@@ -38,11 +38,8 @@ module Api
     end
 
     def destroy
-      if company
-        company.destroy
-      else
-        render json: { errors: current_user.errors }, status: :bad_request
-      end
+      authorize company
+      company.destroy
     end
 
     private
@@ -52,7 +49,7 @@ module Api
     end
 
     def company
-      @company ||= Company.find_by id: params[:id]
+      @company ||= Company.find(params[:id])
     end
   end
 end

@@ -114,12 +114,6 @@ RSpec.describe 'Companys API', type: :request do
                                headers: { Authorization: user.token }
         expect(response).to have_http_status(:bad_request)
       end
-      it 'checks for errors key' do
-        post '/api/companies', params: { company: { name: '' } },
-                               headers: { Authorization: user.token }
-
-        expect(json_body[:errors]).to include(:name)
-      end
     end
   end
 
@@ -149,9 +143,6 @@ RSpec.describe 'Companys API', type: :request do
             headers: { Authorization: user.token }
       end
 
-      it 'does not update a company name' do
-        expect(json_body[:errors]).to include(:name)
-      end
       it 'returns 400 Bad request' do
         expect(response).to have_http_status(:bad_request)
       end
@@ -207,7 +198,7 @@ RSpec.describe 'Companys API', type: :request do
       it 'returns status Bad request' do
         delete '/api/companies/wrong_company',
                headers: { Authorization: user.token }
-        expect(response).to have_http_status(:bad_request)
+        expect(response).to have_http_status(:not_found)
       end
     end
 

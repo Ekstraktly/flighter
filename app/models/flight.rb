@@ -43,16 +43,6 @@ class Flight < ApplicationRecord
     overlap_errors
   end
 
-  def current_price
-    return base_price * 2 if flys_at <= Time.zone.now
-
-    base_price + (((15 - days_to_flight) / 15.0) * base_price).to_i
-  end
-
-  def days_to_flight
-    (flys_at.to_date - Date.current).to_i
-  end
-
   def overlap_errors
     errors.add(:flys_at, "flights can't overlap")
     errors.add(:lands_at, "flights can't overlap")

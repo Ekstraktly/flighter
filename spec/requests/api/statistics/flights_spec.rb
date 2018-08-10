@@ -1,7 +1,7 @@
 RSpec.describe 'Flights Statistics API', type: :request do
   include TestHelpers::JsonResponse
   describe 'GET /api/statistics/flights' do
-    context 'when authenticated user and params are valid' do
+    context 'when user is authenticated and params are valid' do
       let(:user) { FactoryBot.create(:user) }
       let(:flight) do
         FactoryBot.create(:flight,

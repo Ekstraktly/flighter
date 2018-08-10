@@ -5,9 +5,9 @@ module Api
                                           :update,
                                           :destroy,
                                           :create]
-    before_action :authorize, only: [:update, :destroy, :show]
 
     def index
+      authorize Booking
       bookings = current_user.bookings.joins(:flight)
                              .order('flights.flys_at',
                                     'flights.name',
@@ -18,32 +18,32 @@ module Api
     end
 
     def show
-      if booking
-        render json: booking
-      else
-        render json: { 'errors': { 'resource': ['is forbidden'] } },
-               status: :forbidden
-      end
+      authorize booking
+      render json: booking
     end
 
     def create
-      booking = create_booking
-      if booking.save
-        render json: booking, status: :created
+      authorize Booking
+      form = BookingForm.new(booking_params)
+      if form.save
+        render json: form, serializer: BookingSerializer, status: :created
       else
-        render json: { errors: booking.errors }, status: :bad_request
+        render json: { errors: form.errors }, status: :bad_request
       end
     end
 
     def update
-      if booking.update(params_for_update)
-        render json: booking
+      authorize booking
+      form = ActiveType.cast(booking, BookingForm)
+      if form.update(booking_params.merge(flight_id: booking.flight_id))
+        render json: form, serializer: BookingSerializer
       else
-        render json: { errors: booking.errors }, status: :bad_request
+        render json: { errors: form.errors }, status: :bad_request
       end
     end
 
     def destroy
+      authorize booking
       booking&.destroy
     end
 
@@ -53,33 +53,11 @@ module Api
       params.require(:booking).permit(:flight_id,
                                       :user_id,
                                       :no_of_seats)
-    end
-
-    def params_for_update
-      booking_params
-        .merge(user_id: @current_user.id,
-               seat_price: booking.flight&.current_price)
+            .merge(user_id: current_user.id)
     end
 
     def booking
       @booking ||= Booking.find(params[:id])
-    end
-
-    def flight
-      @flight ||= Flight.find_by(id: booking_params[:flight_id])
-    end
-
-    def create_booking
-      Booking.new(flight_id: booking_params[:flight_id],
-                  user_id: current_user.id,
-                  no_of_seats: booking_params[:no_of_seats],
-                  seat_price: flight&.current_price)
-    end
-
-    def authorize
-      return if booking.user == current_user
-      render json: { errors: { resource: ['is forbidden'] } },
-             status: :forbidden
     end
   end
 end

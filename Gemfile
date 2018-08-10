@@ -16,10 +16,17 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.7'
   gem 'shoulda-matchers'
 end
+
+group :test do
+  gem 'pundit-matchers', '~> 1.6.0'
+end
+
 gem 'active_model_serializers', '~> 0.10.0'
+gem 'active_type'
 gem 'activeadmin'
 gem 'bcrypt', '~> 3.1.7'
 gem 'httparty'
+gem 'pundit'
 gem 'rails_12factor'
 gem 'table_print'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
