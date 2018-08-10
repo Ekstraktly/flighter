@@ -17,12 +17,8 @@ module Api
     end
 
     def show
-      if flight
-        authorize flight
-        render json: flight
-      else
-        render json: { errors: current_user.errors }, status: :bad_request
-      end
+      authorize flight
+      render json: flight
     end
 
     def create

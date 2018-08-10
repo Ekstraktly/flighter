@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
 
   def authentificate
     return if current_user
-    render json: { 'errors': { 'token': ['is invalid'] } },
+    render json: { errors: { token: ['is invalid'] } },
            status: :unauthorized
   end
 
@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   end
 
   def user_not_authorized
-    render json: { 'errors': { 'resource': ['is forbidden'] } },
+    render json: { errors: { resource: ['is forbidden'] } },
            status: :forbidden
   end
 
@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
   end
 
   def render_not_found_response
-    render json: { 'errors': { 'resource': ["doesn't exist"] } },
+    render json: { errors: { resource: ["doesn't exist"] } },
            status: :not_found
   end
 end

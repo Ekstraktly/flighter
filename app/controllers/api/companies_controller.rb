@@ -14,12 +14,8 @@ module Api
     end
 
     def show
-      if company
-        authorize company
-        render json: company
-      else
-        render json: { errors: company.errors }, status: :bad_request
-      end
+      authorize company
+      render json: company
     end
 
     def create
@@ -42,12 +38,8 @@ module Api
     end
 
     def destroy
-      if company
-        authorize company
-        company.destroy
-      else
-        render json: { errors: current_user.errors }, status: :bad_request
-      end
+      authorize company
+      company.destroy
     end
 
     private

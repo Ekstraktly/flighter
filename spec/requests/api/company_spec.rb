@@ -143,9 +143,6 @@ RSpec.describe 'Companys API', type: :request do
             headers: { Authorization: user.token }
       end
 
-      # it 'does not update a company name' do
-      #  expect(json_body[:errors]).to include(:name)
-      # end
       it 'returns 400 Bad request' do
         expect(response).to have_http_status(:bad_request)
       end
