@@ -1,4 +1,6 @@
 # README
-flighter.herokuapp.com
+
+REST API for imaginary flight company built for Infinum Backend Academy
+
 Applicatioin
-https://flighter2.herokuapp.com/
+https://flighter.herokuapp.com/
